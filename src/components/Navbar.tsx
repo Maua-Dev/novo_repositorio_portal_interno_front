@@ -10,7 +10,7 @@ export default function Navbar() {
     const [opened, setOpened] = useState(false)
     return (
         <nav className={`bg-white w-full flex justify-center p-2 place-self-end transition-all shadow md:p-0 md:h-screen md:flex-col md:justify-between fixed ${opened ? "md:w-52" : "md:w-32"}`}>
-            <div className="md:hidden flex w-full justify-center top-0 shadow fixed">
+            <div className="bg-white md:hidden flex w-full justify-center top-0 shadow-md fixed">
                 <img src="/src/assets/images/logo_dev.png" alt="Logo DEV" className="max-w-12 place-self-center m-3" />
             </div>
             <div className={`flex md:flex-col`}>
