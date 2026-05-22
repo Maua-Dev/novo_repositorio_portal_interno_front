@@ -9,8 +9,8 @@ export default function Navbar() {
     const labelClasses = "hidden md:ps-7 md:block text-lg font-medium"
     const [opened, setOpened] = useState(false)
     return (
-        <nav className={`bg-white w-full flex justify-center p-2 place-self-end transition-all shadow md:p-0 md:h-screen md:flex-col md:justify-between fixed ${opened ? "md:w-52" : "md:w-32"}`}>
-            <div className="bg-white md:hidden flex w-full justify-center top-0 shadow-md fixed">
+        <nav className={`bg-white poppins-regular w-full flex justify-center p-2 place-self-end transition-all shadow md:p-0 md:h-screen md:flex-col md:justify-between fixed bottom-0 left-0 z-20 md:top-0 ${opened ? "md:w-52" : "md:w-32"}`}>
+            <div className="bg-white md:hidden flex w-full justify-center top-0 shadow-md fixed left-0 z-30">
                 <img src="/src/assets/images/logo_dev.png" alt="Logo DEV" className="max-w-12 place-self-center m-3" />
             </div>
             <div className={`flex md:flex-col`}>
