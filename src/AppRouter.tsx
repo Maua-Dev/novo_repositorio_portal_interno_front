@@ -4,11 +4,11 @@ import UserProfile from "./pages/UserProfile";
 import UserActivities from "./pages/UserActivities";
 
 export default function AppRouter() {
-    return(
+    return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/perfil" element={<UserProfile />} />
             <Route path="/atividades" element={<UserActivities />} />
+            <Route path="/perfil" element={<UserProfile />} />
         </Routes>
     )
 }
