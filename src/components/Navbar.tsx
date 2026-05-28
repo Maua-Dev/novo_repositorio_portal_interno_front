@@ -22,7 +22,7 @@ export default function Navbar() {
         navigate('/perfil')
     }
     const goActivities = () => {
-        navigate('/atividades')
+        navigate('/adicionar-atividade')
     }
     const goHistory = () => {
         navigate('/historico')
@@ -42,7 +42,7 @@ export default function Navbar() {
                     <button className={buttonClasses} onClick={goProfile}><FaUser />{opened && <span className={labelClasses}>Perfil</span>}</button>
                     <button className={buttonClasses} onClick={goActivities}><FaPlusSquare />{opened && <span className={labelClasses}>Tarefa</span>}</button>
                     <button className={buttonClasses} onClick={goHistory}><FaClockRotateLeft />{opened && <span className={labelClasses}>Histórico</span>}</button>
-                    <button className={buttonClasses}><HiMiniUsers />{opened && <span className={labelClasses}>Não sei</span>}</button>
+                    <button className={buttonClasses}><HiMiniUsers />{opened && <span className={labelClasses}>Membros</span>}</button>
                     <button className={buttonClasses} onClick={goHoursChart}><FiPieChart />{opened && <span className={labelClasses}>Geral</span>}</button>
                 </div>
             </div>

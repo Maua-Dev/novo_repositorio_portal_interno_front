@@ -9,7 +9,7 @@ export default function AppRouter() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/atividades" element={<UserActivities />} />
+            <Route path="/adicionar-atividade" element={<UserActivities />} />
             <Route path="/perfil" element={<UserProfile />} />
             <Route path="/historico" element={<History />} />
             <Route path="/horas-gerais" element={<HoursChart />} />
