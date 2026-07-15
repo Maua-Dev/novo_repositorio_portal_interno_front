@@ -162,7 +162,7 @@ export default function HoursChart() {
             <BasicPie></BasicPie>
 
             <div
-              className={`${darkTheme ? `text-white` : `text-black`} flex flex-col max-h-50 overflow-y-auto gap-2 text-2xl px-10 py-5 m-5 transition-all duration-300`}
+              className={`${darkTheme ? `text-white scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `text-black scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col max-h-50 overflow-y-auto scrollbar-thin gap-2 text-2xl px-10 py-5 m-5 transition-all duration-300`}
             >
               <div className="flex items-center gap-3">
                 <div className="rounded-full bg-blue-700 w-2 h-2"></div>
@@ -276,7 +276,7 @@ export default function HoursChart() {
 
               <div
                 className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`}
-                flex flex-col w-full overflow-y-auto scrollbar-thin px-2 transition-all duration-400 ease-out 
+                flex flex-col w-full overflow-y-auto scrollbar-thin px-2 transition-all duration-300 ease-out 
                 ${projectsOpen ? `max-h-120 opacity-100 translate-y-0` : `max-h-0 opacity-0 -translate-y-2 overflow-hidden`}`}
               >
                 <div className="flex flex-col p-3 gap-3">
