@@ -6,9 +6,10 @@ import MemberCard from "../components/memberCard";
 import ActionCard from "../components/actionCard";
 import { useState } from 'react';
 import type { ChangeEvent } from "react";
-import { IoMdSearch } from "react-icons/io";
 import { ThemeContext } from "../contexts/themeContext";
 import { useContext } from "react";
+import MembersArea from "../components/memberArea";
+import ActionArea from "../components/actionsArea";
 
 function UserActivities() {
 
@@ -21,12 +22,12 @@ function UserActivities() {
 
     const [addM, setAddM] = useState(false);
     const addMember = () => {
-        setAddM(!addM);
+        setAddM((prev) => !prev);
     }
 
     const [addA, setAddA] = useState(false);
     const addAction = () => {
-        setAddA(!addA);
+        setAddA((prev) => !prev);
     }
 
     const [title, setTitle] = useState<string>("");
@@ -100,15 +101,21 @@ function UserActivities() {
         }
 
     return(
-        <div className="flex flex-col md:flex-row w-full">
+        <div className="flex flex-col md:flex-row justify-center items-center w-full">
 
     <div className="flex">
         <Navbar></Navbar>
     </div>
 
-    <main className="bg-[url(src/assets/images/backgroundActivitiesPI.png)] bg-cover min-h-screen w-full flex justify-center items-center pt-20 pb-20 px-4 md:pl-52 md:pr-10 lg:pr-20">
+    <article className={`${(addM || addA) ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}></article>
+
+     {addM ? <MembersArea addMember={addMember}/> : ``}
+     {addA ? <ActionArea addAction={addAction}/> : ``}
         
-        <article className={`${darkTheme ? `bg-[#1E1E1E] text-white ` : `bg-white`} w-full max-w-350 rounded-4xl flex flex-col lg:flex-row transition-all duration-300`}>
+    <main className={`${darkTheme ? `bg-[url(src/assets/images/backgroundActivitiesPI.png)]` : `bg-[url(src/assets/images/whiteBackground.png)]`} bg-cover min-h-screen w-full flex justify-center items-center pt-20 pb-20 px-4 md:pl-52 md:pr-10 lg:pr-20`}>
+        
+
+        <article className={`${darkTheme ? `bg-[#1E1E1E] text-white ` : `bg-white text-black drop-shadow-2xl`} w-full max-w-350 rounded-4xl flex flex-col lg:flex-row transition-all duration-300`}>
 
             <section className="flex flex-col w-full lg:w-2/3 rounded-4xl gap-5 p-6 md:p-10 lg:p-15">
 
@@ -119,7 +126,7 @@ function UserActivities() {
                         type="text"
                         value={title}
                         onChange={handleTitle}
-                        className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} w-full rounded-3xl p-4 focus:outline-none transition-all duration-300`}
+                        className={`${darkTheme ? `bg-[#484848] text-white` : `bg-[#E8ECEB] text-black`} w-full rounded-3xl p-4 focus:outline-none transition-all duration-300`}
                     />
                 </div>
 
@@ -279,22 +286,11 @@ function UserActivities() {
                         <h2 className="font-[Oswald] font-bold text-lg transition-all duration-300">
                             Membros
                         </h2>
+                        <AiOutlinePlusCircle
+                            onClick={addMember}
+                            className={`${darkTheme ? `text-white` : `text-[#555E5E]`}  cursor-pointer h-5 w-5 transition-all duration-300`}
+                        ></AiOutlinePlusCircle>
 
-                        {addM ?
-                            <div className="flex justify-end items-center h-full relative">
-                                <input
-                                    className={`${darkTheme ? `bg-[#484848]` : `bg-[#AEB6B5]`} text-white text-sm font-[inter] items-center p-2 rounded-lg focus:outline-none placeholder:text-white transition-all duration-300`}
-                                    placeholder="BUSCAR"
-                                />
-
-                                <IoMdSearch className={`${darkTheme ? `text-black` : `text-white`} absolute right-2 transition-all duration-300`}></IoMdSearch>
-                            </div>
-                            :
-                            <AiOutlinePlusCircle
-                                onClick={addMember}
-                                className={`${darkTheme ? `text-white` : `text-[#555E5E]`} cursor-pointer h-5 w-5 transition-all duration-300`}
-                            ></AiOutlinePlusCircle>
-                        }
                     </div>
 
                     <div className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex justify-center items-center flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}>
@@ -316,21 +312,11 @@ function UserActivities() {
                             Ação
                         </h2>
 
-                        {addA ?
-                            <div className="flex justify-end items-center relative">
-                                <input
-                                    className={`${darkTheme ? `bg-[#484848]` : `bg-[#AEB6B5]`} text-white text-sm font-[inter] items-center p-2 rounded-lg focus:outline-none placeholder:text-white transition-all duration-300`}
-                                    placeholder="BUSCAR"
-                                />
-
-                                <IoMdSearch className={`${darkTheme ? `text-black` : `text-white`} absolute right-2 transition-all duration-300`}></IoMdSearch>
-                            </div>
-                            :
-                            <AiOutlinePlusCircle
-                                onClick={addAction}
-                                className={`${darkTheme ? `text-white` : `text-[#555E5E]`} cursor-pointer h-5 w-5 transition-all duration-300`}
-                            ></AiOutlinePlusCircle>
-                        }
+                        <AiOutlinePlusCircle
+                            onClick={addAction}
+                            className={`${darkTheme ? `text-white` : `text-[#555E5E]`} cursor-pointer h-5 w-5 transition-all duration-300`}
+                        ></AiOutlinePlusCircle>
+                        
                     </div>
 
                     <div className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex justify-center items-center flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}>
