@@ -16,7 +16,7 @@ export default function Profile() {
             <div className="flex static ">
                 <Navbar />
             </div>
-            <main className="bg-[url(src/assets/images/backgroundActivitiesPI.png)] bg-cover min-h-screen w-full flex justify-center pt-20 pb-20 md:pl-52 md:pr-20">
+            <main className={`${darkTheme? "bg-[url(src/assets/images/backgroundActivitiesPI.png)]": "bg-[url(src/assets/images/whiteBackground.png)]" } bg-cover min-h-screen w-full flex justify-center pt-20 pb-20 md:pl-52 md:pr-20`}>
                 <div className="w-5/6 h-fit flex flex-col gap-5 md:flex-row md:w-full">
                     <div id="card-resumo-perfil" className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} rounded-2xl p-6 flex flex-col gap-6 md:w-3/4 transition-all duration-300`}>
                         <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-2xl md:text-3xl transition-all duration-300`}>Resumo do seu perfil</h2>
