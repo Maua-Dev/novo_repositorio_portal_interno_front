@@ -50,7 +50,7 @@ export default function Profile() {
                                             <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Status:</span> Ativo</p>
                                         </div>
                                         <div>
-                                            <SocialProfile/>
+                                            <SocialProfile />
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@ export default function Profile() {
                             </div>
                         </div>
                         <div className={`${darkTheme ? `border-[#BCBCBC]` : `border-gray-200`} border w-full place-self-center transition-all duration-300`} />
-                        <img src="./src/assets/images/dev_perfil.png" alt="Imagem dev branca" />
+                        {darkTheme ? <img src="./src/assets/images/dev_perfil_dark.png" alt="logo dev dark" /> : <img src="./src/assets/images/dev_perfil.png" alt="logo dev branca" />}
                     </div>
                     <div className="flex flex-col gap-5 md:w-1/3">
                         <div id="card-horas-perfil" className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} rounded-2xl p-6 flex flex-col gap-6 transition-all duration-300`}>
