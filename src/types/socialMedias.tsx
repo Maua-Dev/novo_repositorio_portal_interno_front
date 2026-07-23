@@ -1,0 +1,1 @@
+export type socialMedia = "Discord" | "Linkedin" | "Phone";
