@@ -11,7 +11,7 @@ export default function Profile() {
     const { darkTheme } = useContext(ThemeContext);
 
     const [pfpHovered, setPfpHovered] = useState(false)
-    localStorage.setItem("Redes sociais", JSON.stringify({ "phone": "(11) 99858-6587", "discord": "_lukzin", "linkedin": "lucca" }))
+    localStorage.setItem("Redes sociais", JSON.stringify({ "phone": "(11) 99858-6587", "discord": "_lukzin", "linkedin": "lbrodrigues" }))
     return (
         <div className="flex w-full poppins-regular">
 
@@ -24,7 +24,7 @@ export default function Profile() {
                         <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-2xl md:text-3xl transition-all duration-300`}>Resumo do seu perfil</h2>
                         <div className="flex flex-col md:flex-row gap-6 md:gap-20">
                             <div
-                                className="bg-linear-to-r from-purple-600 to-blue-300 rounded-full justify-center place-items-center w-28 h-28 text-white flex relative overflow-hidden"
+                                className="relative flex size-28 shrink-0 self-center place-items-center justify-center overflow-hidden rounded-full bg-linear-to-r from-purple-600 to-blue-300 text-white md:self-start"
                                 onMouseEnter={() => setPfpHovered(true)}
                                 onMouseLeave={() => setPfpHovered(false)}
                             >
@@ -35,11 +35,11 @@ export default function Profile() {
                                     Editar
                                 </div>
                             </div>
-                            <div id="resumo-info-perfil" className="flex flex-col gap-3">
+                            <div id="resumo-info-perfil" className="flex flex-1 flex-col gap-3">
                                 <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-xl md:hidden transition-all duration-300`}>Informações pessoais</h2>
                                 <div className={`${darkTheme ? `text-white` : `text-black`} text-lg flex flex-col md:gap-3 transition-all duration-300`}>
                                     <p className="font-semibold md:text-2xl">Lucca Rodrigues</p>
-                                    <div className="md:flex gap-12">
+                                    <div className="gap-12 md:flex md:w-full">
                                         <div>
                                             <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>RA:</span> 25.00503-4</p>
                                             <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Curso:</span> CIC</p>
@@ -49,7 +49,7 @@ export default function Profile() {
                                             <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Cargo:</span> Desenvolvedor / Gestor</p>
                                             <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Status:</span> Ativo</p>
                                         </div>
-                                        <div>
+                                        <div className="md:ml-auto md:mr-6">
                                             <SocialProfile />
                                         </div>
                                     </div>
