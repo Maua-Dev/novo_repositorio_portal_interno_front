@@ -5,6 +5,9 @@ import { FaRegClock } from "react-icons/fa";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { IoIosArrowForward } from "react-icons/io";
 import BasicPie from "../components/pieChartAdmin";
+import ProjectsFilter from "../components/projectsFilter";
+import ActionsFilter from "../components/actionsFilter";
+import ProjectSummary from "../components/projectSummary";
 
 export default function HoursChart() {
   const { darkTheme } = useContext(ThemeContext);
@@ -19,12 +22,113 @@ export default function HoursChart() {
     setProjectsOpen((prev) => !prev);
   };
 
-  //FAZER LÓGICA PARA DEIXAR totalHours E activeProjects COMO "let" AO INVÉS DE "const"
   const totalHours = 1200;
   const activeProjects = 5;
   const totalProjects = 7;
   const showProjects = `${activeProjects}/${totalProjects}`;
-  const number = 8; //Protótipo para dinamizar a progressão das barras de horas
+
+  const [projects, setProjectFilter] = useState([
+  {id: 0, project: "Aerodesign", chosen: false},
+  {id: 1, project: "DevMedias", chosen: false},
+  {id: 2, project: "Luz", chosen: false},
+  {id: 3, project: "MauáFood", chosen: false},
+  {id: 4, project: "Portal das Entidades", chosen: false},
+  {id: 5, project: "Portal Interno", chosen: false},
+  {id: 6, project: "Portifólio", chosen: false},
+  {id: 7, project: "Reservation", chosen: false},
+  {id: 8, project: "Teia Criativa", chosen: false},
+  {id: 9, project: "Outros", chosen: false}
+  ])
+
+  const togglePFilter = (index: number) => {
+    setProjectFilter(prev => 
+      prev.map((project, id) => 
+        id === index ? {...project, chosen: !project.chosen} 
+        : project )
+    )
+  }
+
+  const [actions, setActionsFilter] = useState([
+    {id: 0, action: "Frontend", chosen: false},
+    {id: 1, action: "Backend", chosen: false},
+    {id: 2, action: "RH", chosen: false},
+    {id: 3, action: "Business", chosen: false},
+    {id: 4, action: "UI/UX", chosen: false},
+  ])
+
+  const toggleAFilter = (index: number) => {
+    setActionsFilter(prev => 
+      prev.map((action, id) => 
+      index === id ? {...action, chosen: !action.chosen} : action)
+    )
+  }
+
+  const [apply, setApply] = useState(false)
+  // const toggleApply = () => {
+  //   setApply(true)
+  // }
+
+  
+  // const newProjectsList: string[] = []
+  const [newProjectsList, setNewProjectsList] = useState<string[]>([])
+  const [newActionsList, setNewActionsList] = useState<string[]>([])
+  const [projectHours, setProjectHours] = useState<Record<string, number>>({})
+  // const modifyNeList = () => {
+  //   projects.forEach((project) => (
+  //     (project.chosen === true) ? 
+  //     newProjectsList.push(project.project)
+  //     : (newProjectsList.includes(project.project) ? newProjectsList.splice(newProjectsList.indexOf(project.project), 1) : project)
+  //   ))
+  // }
+
+  // const modifyNewList = () => {
+  //   projects.forEach((project) => {
+  //     if (project.chosen && !newProjectsList.includes(project.project)) {
+  //       newProjectsList.push(project.project);
+  //     } 
+  //     else if (project.chosen === false && newProjectsList.includes(project.project)) {
+  //       const index = newProjectsList.indexOf(project.project);
+  //       newProjectsList.splice(index, 1);
+  //     }
+  //   });
+  // };
+
+  const Aplicar = () => {
+    const selectedProjects = projects
+    .filter(p => p.chosen)
+    .map(p => p.project);
+
+  setNewProjectsList(selectedProjects);
+
+  const selectedActions = actions
+  .filter(p => p.chosen)
+  .map(p => p.action)
+
+  setNewActionsList(selectedActions);
+
+  const hours = selectedProjects.reduce((acc, project) => {
+    acc[project] = getRandomIndex(numberList);
+    return acc;
+  }, {} as Record<string, number>);
+
+  setProjectHours(hours);
+
+    toggleHours()
+    // toggleApply()
+    setApply(true)
+
+  }
+
+  //Só pra brincar um pouco com a progressão dos projetos em "resumo por projeto"
+  const numberList: number[] = [100, 200, 300, 400, 500, 600]
+  function getRandomIndex<T>(lista: T[]): T {
+    const randomIndex = Math.floor(Math.random() * lista.length);
+    return lista[randomIndex];
+  }
+  // const [randomNumber] = useState(() => getRandomIndex(numberList))
+
+  const temporaryHoursList = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
 
   return (
     <main className="flex flex-col md:flex-row w-full">
@@ -35,9 +139,9 @@ export default function HoursChart() {
       <section
         className={`${darkTheme ? `bg-[url(src/assets/images/backgroundActivitiesPI.png)]` : `bg-[url(src/assets/images/whiteBackground.png)]`} bg-cover flex flex-col w-full min-h-screen transition-all duration-300 pt-20 pb-20 px-4 md:pl-52 md:pr-10 lg:pr-20`}
       >
-        <div className="flex gap-10 drop-shadow-xl">
+        <div className="flex flex-col md:flex-row gap-10 drop-shadow-xl">
           <article
-            className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-1/3 md:h-175 flex flex-col rounded-2xl transition-all duration-300`}
+            className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-1/3 md:h-175 flex flex-col gap-5 rounded-2xl transition-all duration-300`}
           >
             <div
               className={`${darkTheme ? `bg-black` : `bg-[#E2E2E2]`} flex w-fit drop-shadow-lg rounded-2xl items-center gap-2 p-5 transition-all duration-300`}
@@ -54,7 +158,7 @@ export default function HoursChart() {
             </div>
 
             <div
-              className={`${hoursOpen ? `opacity-100 translate-y-10 z-1` : `opacity-0 translate-y-0`} ${darkTheme ? `text-white bg-[#101010]` : `text-black bg-[#F0F0F0]`} flex absolute mt-10 max-h-80 w-100 rounded-2xl justify-between p-5 transition-all duration-300`}
+              className={`${hoursOpen ? `opacity-100 translate-y-10 z-1` : `opacity-0 translate-y-0`} ${darkTheme ? `text-white bg-[#101010]` : `text-black bg-[#F0F0F0]`} flex absolute mt-10 md:w-100 rounded-2xl justify-between p-5 transition-all duration-300`}
             >
               <div className="flex flex-col gap-2">
                 <div className="flex gap-10 items-center justify-between">
@@ -70,88 +174,29 @@ export default function HoursChart() {
 
                 <div className="flex gap-5">
                   <div className="flex flex-col">
-                    <div className="flex justify-between gap-10">
-                      <p>Portal Interno</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF] bg-[#4562B3]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Reservation</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Portal das Entidades</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>DevMedias</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Luz</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Teia Criativa</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Aerodesign</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Portifólio</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>MauáFood</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
-
-                    <div className="flex justify-between gap-10">
-                      <p>Outros</p>
-                      <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                    </div>
+                    {projects.map((project) => (
+                      <ProjectsFilter
+                      project={project.project}
+                      chosen={project.chosen}
+                      onChoose={() => togglePFilter(project.id)}
+                      ></ProjectsFilter>
+                    ))}
                   </div>
 
                   <div className="flex flex-col justify-between">
                     <div className="flex flex-col">
-                      <div className="flex justify-between gap-10">
-                        <p>Front-End</p>
-                        <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                      </div>
-
-                      <div className="flex justify-between gap-10">
-                        <p>Back-End</p>
-                        <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                      </div>
-
-                      <div className="flex justify-between gap-10">
-                        <p>UI/UX</p>
-                        <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                      </div>
-
-                      <div className="flex justify-between gap-10">
-                        <p>Business</p>
-                        <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                      </div>
-
-                      <div className="flex justify-between gap-10">
-                        <p>RH</p>
-                        <input type="checkbox" className="w-4 h-4 z-1 cursor-pointer appearance-none rounded-full border border-[#CAD0CF]"/>
-                      </div>
+                      {actions.map((action) => (
+                        <ActionsFilter
+                        action={action.action}
+                        chosen={action.chosen}
+                        onChoose={() => toggleAFilter(action.id)}
+                        ></ActionsFilter>
+                      ))}
                     </div>
 
                     <button
                       className="bg-[#5C76BC] text-center rounded-2xl text-white cursor-pointer hover:scale-110 transition-all duration-300"
-                      onClick={toggleHours}
+                      onClick={Aplicar}
                     >
                       Aplicar
                     </button>
@@ -159,73 +204,72 @@ export default function HoursChart() {
                 </div>
               </div>
             </div>
-            <BasicPie></BasicPie>
 
-            <div
-              className={`${darkTheme ? `text-white` : `text-black`} flex flex-col max-h-50 overflow-y-auto gap-2 text-2xl px-10 py-5 m-5 transition-all duration-300`}
-            >
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-700 w-2 h-2"></div>
-                <p>Reservation</p>
-              </div>
+            <BasicPie
+            hours={temporaryHoursList}
+            projectList={newProjectsList}
+            ></BasicPie>
 
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-500 w-2 h-2"></div>
-                <p>Portal Interno</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-400 w-2 h-2"></div>
-                <p>DevMedias</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-300 w-2 h-2"></div>
-                <p>Luz</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-300 w-2 h-2"></div>
-                <p>Luz</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-300 w-2 h-2"></div>
-                <p>Luz</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-300 w-2 h-2"></div>
-                <p>Luz</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-blue-300 w-2 h-2"></div>
-                <p>Luz</p>
-              </div>
+            {((apply === false) || (newProjectsList.length === 0 && newActionsList.length === 0)) ? 
+            <div className={`${darkTheme ? `text-white` : `text-black`} flex h-60 w-full text-2xl justify-center transition-all duration-300`}>
+              <h2 className="text-center">Selecione um projeto para ver<br/> seus detalhes!</h2>
             </div>
+            : <div
+              className={`${darkTheme ? `text-white scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `text-black scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col md:h-50 overflow-y-auto scrollbar-thin gap-3 text-2xl md:px-10 py-5 m-5 transition-all duration-300`}
+            >
+              {apply ? 
+              <div className="flex justify-center gap-20 md:gap-40 font-bold">
+                <h4>Projeto(s)</h4>
+                <h4>Área(s)</h4>
+              </div> : ``}
+              
+              <div className="flex justify-between max-h-40 overflow-y-auto appearance-none scrollbar-thin">
+                <div className="flex flex-col md:w-1/2 gap-4">
+                {newProjectsList.map((project) => (
+                  <div className="flex gap-10">
+                    <div className="flex justify-center items-center gap-2">
+                      <div className="rounded-full bg-blue-300 w-2 h-2"></div>
+                      <p className="text-md">{project}</p>
+                    </div>
+                  </div>
+                ))}
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  {newActionsList.map((action) => (
+                    <div className="flex gap-10">
+                    <div className="flex justify-center items-center gap-2">
+                      <div className="rounded-full bg-blue-300 w-2 h-2"></div>
+                      <p className="">{action}</p>
+                    </div>
+                  </div>
+                  ))}
+                </div>
+              </div>
+              
+            </div>}
           </article>
 
-          <article className={`md:w-2/3 flex flex-col gap-10`}>
-            <div className="flex w-full gap-10 justify-center">
+          <article className={`md:w-2/3 flex flex-col md:gap-10 mb-10 md:mb-0`}>
+            <div className="flex flex-col md:flex-row w-full gap-5 md:gap-10 justify-center">
               <div
-                className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-100 flex justify-center items-center drop-shadow-xl gap-10 pt-4 pb-4 rounded-lg transition-all duration-300`}
+                className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-100 flex justify-center items-center drop-shadow-xl gap-5 md:gap-10 p-4 rounded-lg transition-all duration-300`}
               >
                 <div
-                  className={`${darkTheme ? `border-white` : `border-black`} w-20 h-20 border rounded-md transition-all duration-300`}
+                  className={`${darkTheme ? `border-white` : `border-black`} flex justify-center items-center w-12 h-12 md:w-20 md:h-20 border rounded-md transition-all duration-300`}
                 >
                   <FaRegClock
-                    className={`${darkTheme ? `text-white` : `text-black`} w-20 h-20 p-3 transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} w-8 h-8 md:w-15 md:h-15 transition-all duration-300`}
                   />
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="flex md:flex-col justify-center items-center gap-10 md:gap-1">
                   <h2
-                    className={`${darkTheme ? `text-white` : `text-black`} text-2xl transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} flex text-center text-xl md:text-3xl transition-all duration-300`}
                   >
                     Horas Totais
                   </h2>
                   <p
-                    className={`${darkTheme ? `text-white` : `text-black`} text-4xl transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} text-2xl md:text-4xl transition-all duration-300`}
                   >
                     {totalHours}
                   </p>
@@ -233,23 +277,23 @@ export default function HoursChart() {
               </div>
 
               <div
-                className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-100 flex justify-center items-center drop-shadow-xl gap-10 pt-4 pb-4 rounded-lg transition-all duration-300`}
+                className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-100 flex justify-center items-center drop-shadow-xl gap-5 md:gap-10 p-4 rounded-lg transition-all duration-300`}
               >
                 <div
-                  className={`${darkTheme ? `border-white` : `border-black`} h-20 w-20 border rounded-md transition-all duration-300`}
+                  className={`${darkTheme ? `border-white` : `border-black`} flex justify-center items-center w-12 h-12 md:w-20 md:h-20 border rounded-md transition-all duration-300`}
                 >
                   <IoNewspaperOutline
-                    className={`${darkTheme ? `text-white` : `text-black`} w-20 h-20 p-3 transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} w-8 h-8 md:w-15 md:h-15 transition-all duration-300`}
                   />
                 </div>
-                <div className="flex flex-col items-center ">
+                <div className="flex md:flex-col justify-center items-center gap-10 md:gap-1">
                   <h2
-                    className={`${darkTheme ? `text-white` : `text-black`} text-2xl transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} flex text-center text-xl md:text-3xl transition-all duration-300`}
                   >
                     Projetos Ativos
                   </h2>
                   <p
-                    className={`${darkTheme ? `text-white` : `text-black`} text-4xl transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} text-2xl md:text-4xl transition-all duration-300`}
                   >
                     {showProjects}
                   </p>
@@ -258,13 +302,13 @@ export default function HoursChart() {
             </div>
 
             <div
-              className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} w-full rounded-2xl drop-shadow-xl transition-all duration-300`}
+              className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} w-full translate-y-10 rounded-2xl drop-shadow-xl transition-all duration-300`}
             >
               <div
                 className={`${darkTheme ? `text-white bg-black` : `text-black bg-[#E2E2E2]`} flex justify-between rounded-xl items-center px-7 py-4 text-2xl transition-all duration-300`}
               >
                 <h2
-                  className={`${darkTheme ? `text-white` : `text-black`} flex text-3xl transition-all duration-300`}
+                  className={`${darkTheme ? `text-white` : `text-black`} flex text-2xl md:text-3xl transition-all duration-300`}
                 >
                   Resumo por Projeto
                 </h2>
@@ -277,133 +321,26 @@ export default function HoursChart() {
               <div
                 className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`}
                 flex flex-col w-full overflow-y-auto scrollbar-thin px-2 transition-all duration-400 ease-out 
-                ${projectsOpen ? `max-h-120 opacity-100 translate-y-0` : `max-h-0 opacity-0 -translate-y-2 overflow-hidden`}`}
+                ${projectsOpen ? `max-h-110 opacity-100 translate-y-0` : `max-h-0 opacity-0 translate-y-2 overflow-hidden`}`}
               >
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Reservation</h3>
-                    <h3>40H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div
-                      className={`w-${number}/10 h-5 rounded-2xl bg-blue-700`}
-                    ></div>
-                  </div>
-                </div>
+                {newProjectsList.length === 0 ? 
 
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Portal Interno</h3>
-                    <h3>20H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-9/10 h-5 rounded-2xl bg-blue-500"></div>
-                  </div>
-                </div>
+                <div className={`${darkTheme ? `text-white` : `text-black`} flex flex-col justify-center items-center`}>
+                  {darkTheme ? 
+                  <img src="./src/assets/images/404_new_dark.png" alt="project not found" className={`md:h-110`}/> 
+                  : <img src="./src/assets/images/404_new_light.png" alt="project not found" className={`md:h-110`}/>}
+                </div> 
 
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">DevMedias</h3>
-                    <h3>10H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-5/10 h-5 rounded-2xl bg-blue-400"></div>
-                  </div>
-                </div>
+                : <div className={`${darkTheme ? `text-white` : `text-black`} flex flex-col p-3 gap-3`}>
+                  {newProjectsList.map((project) => (
+                      <ProjectSummary
+                      project={project}
+                      hours={projectHours[project]}
+                      totalHours={totalHours}
+                      ></ProjectSummary>
+                  ))}
+                </div>}
 
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Luz</h3>
-                    <h3>15H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-3/10 h-5 rounded-2xl bg-blue-300"></div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Portal das Entidades</h3>
-                    <h3>22H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-7/10 h-5 rounded-2xl bg-red-700"></div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Aero</h3>
-                    <h3>0H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-6/10 h-5 rounded-2xl bg-red-500"></div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Outros</h3>
-                    <h3>10H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-4/10 h-5 rounded-2xl bg-red-400"></div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Aleatório 1</h3>
-                    <h3>100H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-1/10 h-5 rounded-2xl bg-red-300"></div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">Aleatório 2</h3>
-                    <h3>400H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-2/10 h-5 rounded-2xl bg-red-200"></div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col p-3 gap-3">
-                  <div
-                    className={`${darkTheme ? `text-white` : `text-black`} flex justify-between text-xl transition-all duration-300`}
-                  >
-                    <h3 className="">
-                      Projeto Com Nome Muito Grande para Testar A Interface E
-                      Ver Como Fica O Título Do Projeto No Campo De Resumo Por
-                      Projeto
-                    </h3>
-                    <h3>56H</h3>
-                  </div>
-                  <div className="w-full h-5 rounded-2xl bg-[#D9D9D9]">
-                    <div className="w-full h-5 rounded-2xl bg-red-600"></div>
-                  </div>
-                </div>
               </div>
             </div>
           </article>

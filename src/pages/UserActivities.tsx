@@ -14,14 +14,14 @@ import ActionArea from "../components/actionsArea";
 function UserActivities() {
   const { darkTheme } = useContext(ThemeContext);
 
-  const [addM, setAddM] = useState(false);
-  const addMember = () => {
-    setAddM((prev) => !prev);
+  const [openMembersArea, setOpenMembersArea] = useState(false);
+  const toggleMembersArea = () => {
+    setOpenMembersArea((prev) => !prev);
   };
 
-  const [addA, setAddA] = useState(false);
-  const addAction = () => {
-    setAddA((prev) => !prev);
+  const [openActionArea, setOpenActionsArea] = useState(false);
+  const toggleActionsArea = () => {
+    setOpenActionsArea((prev) => !prev);
   };
 
   const [title, setTitle] = useState<string>("");
@@ -35,11 +35,13 @@ function UserActivities() {
   };
 
   const [projOpen, setProjOpen] = useState(false)
-
   const toggleProjOpen = () => {
     setProjOpen((prev) => !prev)
   }
 
+  const [project, setProject] = useState<string>("");
+
+  //Ver um jeito de puxar os projetos que existem no filtro do HoursChart ao invés de usar a "const projetos"?
   const projetos: string[] = ["Reservation", "Portal Interno", "Luz", "Portal das Entidades", "DevMedias"]
   function mapProjetos() {
     return projetos.map((projeto, index) => (
@@ -47,16 +49,14 @@ function UserActivities() {
     ))
   }
 
-  const [project, setProject] = useState<string>("");
-
-  const handleProject = (e: ChangeEvent<HTMLInputElement>) => {
-    setProject(e.target.value);
-  };
-
   const handleProjectChosen = (chosenProject: string) => {
     setProject(chosenProject)
     setProjOpen(false)
   }
+
+  const handleProject = (e: ChangeEvent<HTMLInputElement>) => {
+    setProject(e.target.value);
+  };
 
   const clearProject = () => {
     setProject("");
@@ -67,6 +67,7 @@ function UserActivities() {
     setAreaOpen((prev) => ! prev)
   }
 
+  //Ver um jeito de puxar as áreas que existem no filtro do HoursChart ao invés de usar a "const areas"?
   const areas: string[] = ["Front-end", "Back-end", "UI/UX", "Business", "RH"]
   function mapAreas() {
     return areas.map((area, index) => (
@@ -76,14 +77,14 @@ function UserActivities() {
 
   const [area, setArea] = useState<string>("");
 
-  const handleArea = (e: ChangeEvent<HTMLInputElement>) => {
-    setArea(e.target.value);
-  };
-
   const handleAreaChosen = (chosenArea: string) => {
     setArea(chosenArea)
     setAreaOpen(false)
   }
+
+  const handleArea = (e: ChangeEvent<HTMLInputElement>) => {
+    setArea(e.target.value);
+  };
 
   const clearArea = () => {
     setArea("");
@@ -124,8 +125,18 @@ function UserActivities() {
     setCalc(!calc);
   };
 
+  //FAZER LÓGICA PRA IMPEDIR QUE O USUÁRIO NÃO COLOQUE OUTRA COISA SEM SER NÚMERO AQUI!
   function calcTime(calc: boolean, time: number) {
-    return (calc ? (time/60).toFixed(2) : null)
+    if (isNaN(time)) {
+      return (
+        setTime(""), //setTime("") não sobrescreve o "0.00" que aparece
+        setNotTime("Tempo Inválido")
+      )
+    }
+    else {
+      return (calc ? (time/60).toFixed(2) : null)
+
+    }
   }
 
   const [about, setAbout] = useState<string>("");
@@ -138,6 +149,193 @@ function UserActivities() {
     setAbout("");
   };
 
+  //Lista para simular os membros do backend
+  const memberList = [
+    {id: 0, name: "Luka O Mago", ra: "00.00000-0", chosen: false },
+    {id: 1, name: "Cesar The Goat", ra: "11.11111-1", chosen: false },
+    {id: 2, name: "Lucca Rodrigues", ra: "22.22222-2", chosen: false },
+    {id: 3, name: "Isa Nakai", ra: "33.33333-3", chosen: false },
+    {id: 4, name: "Giulia Soares", ra: "44.44444-4", chosen: false },
+    {id: 5, name: "Thiago Tokuji", ra: "55.55555-5", chosen: false },
+    {id: 6, name: "Eu", ra: "55.55555-5", chosen: false },
+    {id: 7, name: "Estou", ra: "55.55555-5", chosen: false },
+    {id: 8, name: "Ficando", ra: "55.55555-5", chosen: false },
+    {id: 9, name: "Louco", ra: "55.55555-5", chosen: false },
+    {id: 10, name: "Com", ra: "55.55555-5", chosen: false },
+    {id: 11, name: "Essa", ra: "55.55555-5", chosen: false },
+    {id: 12, name: "Bagaça", ra: "55.55555-5", chosen: false }
+  ];
+
+  //Ordenando a lista de membros do backend para display em "membersArea"
+  const [orderedMemberList, setOrderedMemberList] = useState([...memberList].sort((a, b) => a.name.localeCompare(b.name, "pt-BR")))
+
+  const toggleMemberChosen = (index: number) => {
+    setOrderedMemberList(prev =>
+        prev.map((member, i) =>
+            i === index 
+              ? {...member, chosen: !member.chosen}
+              : member)
+    )
+  }
+
+  const [chosenMembers, setChosenMembers] = useState<
+  { id: number; name: string; ra: string; chosen: boolean }[]
+  >([])
+
+  const saveMember = () => {
+    const selectedMembers = orderedMemberList.filter(m => m.chosen)
+    setChosenMembers(selectedMembers);
+
+    toggleMembersArea()
+  }
+
+  const removeMember = (index: number) => {
+    setChosenMembers((prev) => prev.filter((member) => member.id !== index))
+    setOrderedMemberList((prev) => prev.map((member) => member.id === index ? {...member, chosen: false} : member))
+  };
+
+  //Lista para simular as ações do backend
+  const devActions = [
+    {id: 0, action: "Frontend", chosen: false },
+    {id: 1, action: "Backend", chosen: false },
+    {id: 2, action: "UI/UX", chosen: false },
+    {id: 3, action: "Business", chosen: false },
+    {id: 4, action: "RH", chosen: false }
+  ];
+
+  //Ordenando a lista de ações do backend para display em "actionsArea"
+  const [orderedActionList, setOrderedActionList] = useState([...devActions].sort((a, b) => a.action.localeCompare(b.action, "pt-BR")))
+  
+  const toggleActionChosen = (index: number) => {
+    setOrderedActionList(prev =>
+        prev.map((area, i) =>
+            i === index
+              ? { ...area, chosen: !area.chosen }
+              : area
+        )
+    );
+  }
+
+  const [chosenActions, setChosenActions] = useState<
+  { id: number; action: string; chosen: boolean }[]
+  >([])
+  
+  const saveAction = () => {
+    const selectedActions = orderedActionList.filter(a => a.chosen)
+    setChosenActions(selectedActions);
+
+    toggleActionsArea()
+  }
+
+  const removeAction = (index: number) => {
+    setChosenActions((prev) => prev.filter((action) => action.id !== index))
+    setOrderedActionList((prev) => prev.map((action) => action.id === index ? {...action, chosen: false} : action))
+  }
+
+  const clearMember = () => {
+    setChosenMembers([])
+
+    setOrderedMemberList((prev) => prev.map((member) => ({...member, chosen: false})))
+  }
+
+  const clearAction = () => {
+    setChosenActions([])
+
+    setOrderedActionList((prev) => prev.map((action) => ({...action, chosen: false})))
+  }
+
+  const clearAll = () => {
+    clearAbout()
+    clearArea()
+    clearFrom()
+    clearTo()
+    clearProject() 
+    clearTime() 
+    clearTitle()
+    clearMember()
+    clearAction()
+  }
+
+  const [notTitle, setNotTitle] = useState<string>("");
+  const handleTitleError = () => {
+    if (title === "") {
+      setNotTitle("Digite o título da sua atividade")
+      return false
+    }
+    //fazer else if (só tiver números ou caracteres especiais) {setNotTitle("Digite um título válido")}
+    else {
+      return true
+    }
+  }
+
+  const [notProject, setNotProject] = useState<string>("")
+  const handleProjectError = () => {
+    if (project === "") {
+      setNotProject("Escolha um projeto")
+      return false
+    }
+    else if (!projetos.includes(project)) {
+      setProject("")
+      setNotProject("Escolha um projeto válido")
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+
+  const [notArea, setNotArea] =  useState<string>("")
+  const handleAreaError = () => {
+    if (area === "") {
+      setNotArea("Escolha uma área")
+      return false
+    }
+    else if (!areas.includes(area)) {
+      setArea("")
+      setNotArea("Escolha uma área válida")
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+  const [notTime, setNotTime] = useState<string>("")
+  const handleTimeError = () => {
+    if (time === "") {
+      setNotTime("Digite o tempo")
+      return false
+    }
+    //fazer else if (time = NaN) {setNotTitle("Tempo inválido") return false} ou fazer em "calc"
+    else {
+      return true
+    }
+  }
+
+  const [notAbout, setNotAbout] = useState<string>("")
+  const handleAboutError = () => {
+    if (about === "") {
+      setNotAbout("Descreva a sua atividade")
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+  //verificação no instante do envio
+  const saveAll = () => {
+    if (handleTitleError() &&
+    handleProjectError() &&
+    handleAreaError() &&
+    handleTimeError() &&
+    handleAboutError()) {
+      setTitle("TODAS AS VALIDAÇÕES FORAM FEITAS E A ATIVIDADE ESTÁ VÁLIDA PARA ENVIO.")
+      setTimeout(() => {clearAll()}, 5000)
+    }
+  }
+
   return (
     <div className="flex flex-col md:flex-row justify-center items-center w-full">
       <div className="flex">
@@ -145,11 +343,21 @@ function UserActivities() {
       </div>
 
       <article
-        className={`${addM || addA ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}
+        className={`${openMembersArea || openActionArea ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}
       ></article>
 
-      {addM ? <MembersArea addMember={addMember} /> : ``}
-      {addA ? <ActionArea addAction={addAction} /> : ``}
+      {openMembersArea ? <MembersArea 
+      list={orderedMemberList}
+      toggleChosen={toggleMemberChosen} 
+      toggleOpen={toggleMembersArea}
+      save={saveMember}
+      /> : ``}
+
+      {openActionArea ? <ActionArea
+      list={orderedActionList}
+      toggleChosen={toggleActionChosen}
+      toggleOpen={toggleActionsArea}
+      save={saveAction} /> : ``}
 
       <main
         className={`${darkTheme ? `bg-[url(src/assets/images/backgroundActivitiesPI.png)]` : `bg-[url(src/assets/images/whiteBackground.png)]`} bg-cover min-h-screen w-full flex justify-center items-center pt-20 pb-20 px-4 md:pl-52 md:pr-10 lg:pr-20`}
@@ -164,8 +372,10 @@ function UserActivities() {
               <input
                 type="text"
                 value={title}
+                maxLength={50}
                 onChange={handleTitle}
-                className={`${darkTheme ? `bg-[#484848] text-white` : `bg-[#E8ECEB] text-black`} w-full rounded-3xl p-4 focus:outline-none transition-all duration-300`}
+                placeholder={notTitle}
+                className={`${darkTheme ? `bg-[#484848] text-white` : `bg-[#E8ECEB] text-black`} placeholder:text-red-500 w-full rounded-3xl p-4 focus:outline-none transition-all duration-300`}
               />
             </div>
 
@@ -178,7 +388,8 @@ function UserActivities() {
                     type="text"
                     value={project}
                     onChange={handleProject}
-                    className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} w-full rounded-full py-2 pl-4 pr-20 focus:outline-none transition-all duration-300`}
+                    placeholder={notProject}
+                    className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} placeholder:text-red-500 w-full rounded-full py-2 pl-4 pr-20 focus:outline-none transition-all duration-300`}
                   />
 
                   <button
@@ -205,7 +416,8 @@ function UserActivities() {
                     type="text"
                     value={area}
                     onChange={handleArea}
-                    className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} w-full rounded-full py-2 pl-4 pr-20 focus:outline-none transition-all duration-300`}
+                    placeholder={notArea}
+                    className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} placeholder:text-red-500 w-full rounded-full py-2 pl-4 pr-20 focus:outline-none transition-all duration-300`}
                   />
 
                   <button
@@ -230,10 +442,11 @@ function UserActivities() {
                 <div className="flex">
                   <input
                     type="text"
-                    value={calc ? calcTime(calc, Number(time)) : time}
+                    value={`${calc ? calcTime(calc, Number(time)) : time}`}
                     onChange={handleTime}
+                    placeholder={notTime}
                     disabled={calc}
-                    className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} w-full rounded-3xl py-2 pl-4 focus:outline-none transition-all duration-300`}
+                    className={`${darkTheme ? `bg-[#484848] text-white` : `bg-[#E8ECEB]`} placeholder:text-red-500 w-full rounded-3xl py-2 pl-4 focus:outline-none transition-all duration-300`}
                   />
                 </div>
               </div>
@@ -317,9 +530,11 @@ function UserActivities() {
               <div className="flex h-40 md:h-50 w-full">
                 <textarea
                   value={about}
+                  maxLength={500}
                   onChange={handleAbout}
+                  placeholder={notAbout}
                   className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} 
-                            w-full h-full rounded-4xl p-4 resize-none focus:outline-none transition-all duration-300`}
+                  placeholder:text-red-500 w-full h-full rounded-4xl p-4 resize-none focus:outline-none transition-all duration-300`}
                 />
               </div>
             </div>
@@ -332,22 +547,22 @@ function UserActivities() {
                   Membros
                 </h2>
                 <AiOutlinePlusCircle
-                  onClick={addMember}
-                  className={`${darkTheme ? `text-white` : `text-[#555E5E]`}  cursor-pointer h-5 w-5 transition-all duration-300`}
+                  onClick={toggleMembersArea}
+                  className={`${darkTheme ? `text-white` : `text-[#555E5E]`}  cursor-pointer h-6 w-6 transition-all duration-300`}
                 ></AiOutlinePlusCircle>
               </div>
 
               <div
-                className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex justify-center items-center flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}
+                className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}
               >
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
-                <MemberCard></MemberCard>
+                {chosenMembers.map((member) => (
+                <MemberCard
+                  key={member.id}
+                  name={member.name}
+                  onDelete={() => removeMember(member.id)}
+                />
+                ))}
+                
               </div>
             </div>
 
@@ -358,42 +573,35 @@ function UserActivities() {
                 </h2>
 
                 <AiOutlinePlusCircle
-                  onClick={addAction}
-                  className={`${darkTheme ? `text-white` : `text-[#555E5E]`} cursor-pointer h-5 w-5 transition-all duration-300`}
+                  onClick={toggleActionsArea}
+                  className={`${darkTheme ? `text-white` : `text-[#555E5E]`} cursor-pointer h-6 w-6 transition-all duration-300`}
                 ></AiOutlinePlusCircle>
               </div>
 
               <div
-                className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex justify-center items-center flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}
+                className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}
               >
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
-                <ActionCard></ActionCard>
+                {chosenActions.map((action) => (
+                  <ActionCard
+                  key={action.id}
+                  action={action.action}
+                  onDelete={() => removeAction(action.id)}
+                  />
+                ))}
+                
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row lg:flex-col gap-5 items-center w-full">
               <button
                 className={`${darkTheme ? `bg-[#4562B3] text-white` : `bg-[#4562B3] text-white`} w-full sm:w-40 h-10 rounded-3xl text-xl hover:cursor-pointer transition-all duration-300`}
+                onClick={saveAll}
               >
                 Salvar
               </button>
 
               <button
-                onClick={
-                  clearAbout &&
-                  clearArea &&
-                  clearFrom &&
-                  clearTo &&
-                  clearProject &&
-                  clearTime &&
-                  clearTitle
-                }
+                onClick={clearAll}
                 className={`${darkTheme ? `bg-[#FF2E17] text-white border-none` : `bg-white text-[#FF1100] border border-[#FF1100]`} w-full sm:w-40 h-10 rounded-3xl text-xl hover:cursor-pointer transition-all duration-300`}
               >
                 Limpar
