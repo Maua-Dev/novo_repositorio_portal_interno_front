@@ -3,10 +3,18 @@ import { ThemeContext } from "../contexts/themeContext";
 import { useContext } from "react";
 import ChooseActionCard from "./chooseActionCard";
 
+type Action = {
+    action: string,
+    chosen: boolean
+}
+
 type MembersAreaProps = {
-    addAction: () => void;
+    list: Action[],
+    toggleChosen: (i:number) => void,
+    toggleOpen: () => void,
+    save: () => void
 };
-export default function ActionArea({ addAction }: MembersAreaProps) {
+export default function ActionArea({list, toggleOpen, toggleChosen, save}: MembersAreaProps) {
     
     const { darkTheme } = useContext(ThemeContext);
 
@@ -21,19 +29,17 @@ export default function ActionArea({ addAction }: MembersAreaProps) {
         </div>
 
         <div className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col overflow-y-auto scrollbar-thin px-5 gap-2 h-70`}>
-            <ChooseActionCard></ChooseActionCard>
-            <ChooseActionCard></ChooseActionCard>
-            <ChooseActionCard></ChooseActionCard>
-            <ChooseActionCard></ChooseActionCard>
-            <ChooseActionCard></ChooseActionCard>
-            <ChooseActionCard></ChooseActionCard>
+            <ChooseActionCard
+            list={list}
+            toggleChosen={toggleChosen}
+            ></ChooseActionCard>
         </div>
 
         <div className={`${darkTheme ? `border-[#484848]` : `border-[#CAD0CF]`} flex h-15 border-t items-center transition-all duration-300`}>
-            <button onClick={addAction} className={`${darkTheme ? `text-[#484848] border-[#484848]` : `text-[#737E7D] border-[#CAD0CF]`} flex w-1/2 h-full font-bold border-r justify-center items-center transition-all duration-300`}>
+            <button onClick={save} className={`${darkTheme ? `text-[#888888] border-[#484848]` : `text-[#737E7D] border-[#CAD0CF]`} flex w-1/2 h-full font-bold border-r justify-center items-center transition-all duration-300`}>
                 <p className="text-xl cursor-pointer w-fit">Salvar</p>
             </button>
-            <button onClick={addAction} className={`${darkTheme ? `text-[#484848]` : `text-[#737E7D]`} flex w-1/2 h-full font-bold justify-center items-center transition-all duration-300`}>
+            <button onClick={toggleOpen} className={`${darkTheme ? `text-[#888888]` : `text-[#737E7D]`} flex w-1/2 h-full font-bold justify-center items-center transition-all duration-300`}>
                 <p className="text-xl cursor-pointer w-fit">Cancelar</p>
             </button>
         </div>

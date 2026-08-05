@@ -22,6 +22,7 @@ export default function Navbar() {
 
     const closeMenu = () => setMenuOpen(false)
 
+    const goHome = () => navigate('/')
     const goProfile = () => navigate('/perfil')
     const goActivities = () => navigate('/adicionar-atividade')
     const goHistory = () => navigate('/historico')
@@ -91,7 +92,7 @@ export default function Navbar() {
             <div className="hidden md:flex md:flex-col gap-4 place-items-center md:mb-15">
                 <button className={buttonClasses} onClick={toggleTheme}>{darkTheme ? <FiSun /> : <BsMoonStars />}</button>
                 <button className={buttonClasses + ` ${opened ? "rotate-180" : "rotate-0"}`} onClick={() => setOpened(!opened)}><IoIosArrowForward /></button>
-                <button className={buttonClasses}><IoMdExit /></button>
+                <button onClick={goHome} className={buttonClasses}><IoMdExit /></button>
             </div>
         </nav>
     )
