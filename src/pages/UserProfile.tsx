@@ -11,6 +11,17 @@ export default function Profile() {
     const { darkTheme } = useContext(ThemeContext);
 
     const [pfpHovered, setPfpHovered] = useState(false)
+    const initialProfile = {
+        name: "Lucca Rodrigues",
+        ra: "25.00503-4",
+        curso: "CIC",
+        ano: "2º",
+        cargo: "Desenvolvedor / Gestor",
+        status: "Ativo"
+    }
+    const [profile, setProfile] = useState(initialProfile)
+    const [editForm, setEditForm] = useState(initialProfile)
+    const [isEditing, setIsEditing] = useState(false)
     localStorage.setItem("Redes sociais", JSON.stringify({ "phone": "(11) 99858-6587", "discord": "_lukzin", "linkedin": "lbrodrigues" }))
     return (
         <div className="flex w-full poppins-regular">
@@ -23,12 +34,29 @@ export default function Profile() {
                     <div id="card-resumo-perfil" className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} rounded-2xl p-6 flex flex-col gap-6 md:w-3/4 transition-all duration-300`}>
                         <div className="flex items-start justify-between">
                             <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-2xl md:text-3xl transition-all duration-300`}>Resumo do seu perfil</h2>
-                            <button
-                                onClick={() => alert("Editar perfil")}
-                                className={`${darkTheme ? `text-white border border-[#333] hover:bg-[rgba(255,255,255,0.02)]` : `text-black border border-gray-200 hover:bg-gray-100`} ml-4 px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer`}
-                            >
-                                Editar perfil
-                            </button>
+                            {!isEditing ? (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className={`${darkTheme ? `text-white border border-[#333] hover:bg-[rgba(255,255,255,0.02)]` : `text-black border border-gray-200 hover:bg-gray-100`} ml-4 px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer`}
+                                >
+                                    Editar perfil
+                                </button>
+                            ) : (
+                                <div className="flex gap-2 ml-4">
+                                    <button
+                                        onClick={() => { setProfile(editForm); setIsEditing(false) }}
+                                        className={`${darkTheme ? `text-white bg-green-600 hover:bg-green-700` : `text-white bg-green-500 hover:bg-green-600`} px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer`}
+                                    >
+                                        Salvar
+                                    </button>
+                                    <button
+                                        onClick={() => { setEditForm(profile); setIsEditing(false) }}
+                                        className={`${darkTheme ? `text-white border border-[#333] hover:bg-[rgba(255,255,255,0.02)]` : `text-black border border-gray-200 hover:bg-gray-100`} px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer`}
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         <div className="flex flex-col md:flex-row gap-6 md:gap-20">
                             <div
