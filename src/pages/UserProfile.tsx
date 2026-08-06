@@ -22,7 +22,11 @@ export default function Profile() {
     const [profile, setProfile] = useState(initialProfile)
     const [editForm, setEditForm] = useState(initialProfile)
     const [isEditing, setIsEditing] = useState(false)
-    localStorage.setItem("Redes sociais", JSON.stringify({ "phone": "(11) 99858-6587", "discord": "_lukzin", "linkedin": "lbrodrigues" }))
+
+    const storedSocials = localStorage.getItem("Redes sociais");
+    const parsedSocials = storedSocials ? JSON.parse(storedSocials) : { phone: "(11) 99858-6587", discord: "_lukzin", linkedin: "lbrodrigues" };
+    const [socials, setSocials] = useState(parsedSocials)
+    const [editSocials, setEditSocials] = useState(parsedSocials)
     return (
         <div className="flex w-full poppins-regular">
 
@@ -44,7 +48,7 @@ export default function Profile() {
                             ) : (
                                 <div className="flex gap-2 ml-4">
                                     <button
-                                        onClick={() => { setProfile(editForm); setIsEditing(false) }}
+                                        onClick={() => { setProfile(editForm); setSocials(editSocials); localStorage.setItem("Redes sociais", JSON.stringify(editSocials)); setIsEditing(false) }}
                                         className={`${darkTheme ? `text-white bg-[#4562B3] hover:bg-[#3553a5]` : `text-white bg-blue-300 hover:bg-blue-400`} px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer hover:scale-105`}
                                     >
                                         Salvar
@@ -88,7 +92,7 @@ export default function Profile() {
                                                     <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Status:</span> {profile.status}</p>
                                                 </div>
                                                 <div className="md:ml-auto md:mr-6">
-                                                    <SocialProfile />
+                                                    <SocialProfile socials={socials} />
                                                 </div>
                                             </div>
                                         </>
@@ -114,8 +118,30 @@ export default function Profile() {
                                                     <label className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} text-sm`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold`}>Status:</span></label>
                                                     <input value={editForm.status} onChange={(e) => setEditForm({ ...editForm, status: e.target.value })} className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`} />
                                                 </div>
-                                                <div className="md:ml-auto md:mr-6 flex items-start">
-                                                    <SocialProfile />
+                                                <div className="md:ml-auto md:mr-6 flex items-start gap-4">
+                                                    <div className="flex flex-col items-end gap-2">
+                                                        <SocialProfile socials={editSocials} />
+                                                        <div className="flex flex-col gap-2 mt-2 w-48">
+                                                            <input
+                                                                value={editSocials.phone}
+                                                                onChange={(e) => setEditSocials({ ...editSocials, phone: e.target.value })}
+                                                                placeholder="Telefone"
+                                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`}
+                                                            />
+                                                            <input
+                                                                value={editSocials.linkedin}
+                                                                onChange={(e) => setEditSocials({ ...editSocials, linkedin: e.target.value })}
+                                                                placeholder="LinkedIn"
+                                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`}
+                                                            />
+                                                            <input
+                                                                value={editSocials.discord}
+                                                                onChange={(e) => setEditSocials({ ...editSocials, discord: e.target.value })}
+                                                                placeholder="Discord"
+                                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </>

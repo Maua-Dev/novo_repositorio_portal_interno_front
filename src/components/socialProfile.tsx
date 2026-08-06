@@ -44,12 +44,19 @@ function SocialItem({ icon: Icon, label, value, href, darkTheme }: SocialItemPro
     return <div className={className} title={`${label}: ${value}`}>{content}</div>;
 }
 
-export default function SocialProfile() {
+type Socials = { phone: string; discord: string; linkedin: string };
+
+type Props = {
+    socials?: Socials;
+};
+
+export default function SocialProfile({ socials }: Props) {
     const { darkTheme } = useContext(ThemeContext);
     const socialMediasString = localStorage.getItem("Redes sociais");
-    const socialMedias = socialMediasString
+    const stored = socialMediasString
         ? JSON.parse(socialMediasString)
-        : { phone: "Não informado", discord: "Não informado", linkedin: "Não informado" };
+        : null;
+    const socialMedias: Socials = socials ?? stored ?? { phone: "Não informado", discord: "Não informado", linkedin: "Não informado" };
 
     return (
         <div
