@@ -8,16 +8,22 @@ type Action = {
 
 type ActionProps = {
     list: Action[],
+    searchAction: string,
     toggleChosen: (i:number) => void
 }
 
 
-export default function ChooseActionCard({list, toggleChosen}: ActionProps) {
+export default function ChooseActionCard({list, searchAction, toggleChosen}: ActionProps) {
 
     const { darkTheme } = useContext(ThemeContext);
 
+    const filteredActions = list.filter((action) => {
+        const search = searchAction.toLocaleLowerCase()
+        return action.action.toLocaleLowerCase().includes(search)
+    })
+
     return(
-        list.map((area, index) => (
+        filteredActions.map((area, index) => (
             <div key={index} className={`${darkTheme ? `text-white` : `text-[#484848]`} flex w-full p-2 pr-5 justify-between items-center transition-all duration-300`}>
                 <h2 className={`${darkTheme ? `text-white` : `text-[#0C0C0D]`} text-md`}>{area.action}</h2>
 

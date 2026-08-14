@@ -1,16 +1,25 @@
 type ProjectSummary = {
     project: string,
+    action: string,
     hours: number
     totalHours: number
 }
 
-export default function ProjectSummary({project, hours, totalHours}: ProjectSummary) {
+export default function ProjectSummary({project, action, hours, totalHours}: ProjectSummary) {
     const percentage = (hours/totalHours)*100
    
     return(
         <div className="flex flex-col p-3 gap-3">
             <div className={`flex justify-between text-xl transition-all duration-300`}>
+                {project === "" ?
+                
+                <h3>{action}</h3>
+                : 
+                action === "" ?
                 <h3>{project}</h3>
+                :
+                <h3>{project} - {action}</h3>
+                }
                 <h3>{hours}H</h3>
             </div>
 

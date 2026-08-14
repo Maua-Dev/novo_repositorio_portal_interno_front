@@ -2,7 +2,7 @@ import Navbar from "../components/Navbar";
 import { IoIosArrowForward } from "react-icons/io";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FaCircle } from "react-icons/fa";
-import MemberCard from "../components/memberCard";
+import MemberCard from "../components/memberCardActivities";
 import ActionCard from "../components/actionCard";
 import { useState } from "react";
 import type { ChangeEvent } from "react";
@@ -10,6 +10,11 @@ import { ThemeContext } from "../contexts/themeContext";
 import { useContext } from "react";
 import MembersArea from "../components/memberArea";
 import ActionArea from "../components/actionsArea";
+import { DayPicker } from "react-day-picker";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
+import "react-day-picker/dist/style.css";
+import AnalogClock from "../components/analogClock";
 
 function UserActivities() {
   const { darkTheme } = useContext(ThemeContext);
@@ -103,39 +108,134 @@ function UserActivities() {
   const [from, setFrom] = useState<string>("");
 
   const handleFrom = (e: ChangeEvent<HTMLInputElement>) => {
-    setFrom(e.target.value);
+    let value = e.target.value;
+
+    value = value.replace(/\D/g, "");
+
+    if (Number(value.slice(0,1)) > 3) {
+      value = value.replace(value[0], "")
+    }
+
+    if ((Number(value.slice(0,1)) === 0) && (Number(value.slice(1,2)) === 0)) {
+      value = value.replace(value[1], "")
+    }
+
+    if ((Number(value.slice(0,1)) === 3) && (Number(value.slice(1,2)) > 1)) {
+      value = value.replace(value[1], "")
+    }
+
+    if (value.length > 2) {
+      if (!value.includes("/")) {
+        value = value.slice(0,2) + "/" + value.slice(2)
+      }
+    }
+
+    if (Number(value.slice(3,4)) > 1) {
+      value = value.replace(value[3], "")
+    }
+
+    if ((Number(value.slice(3,4)) === 0) && (Number(value.slice(4,5)) === 0)) {
+      value = value.replace(value[4], "")
+    }
+
+    if ((Number(value.slice(3,4)) === 1) && (Number(value.slice(4,5)) > 2)) {
+      value = value.replace(value[4], "")
+    }
+
+    if (value.length > 5) {
+      if (value[5] != "/") {
+        value = value.slice(0,5) + "/" + value.slice(5)
+      }
+    }
+
+    //TESTAR MAIS, TÁ ESTRANHO COM 01/00 
+    //NÃO ESQUECER DO ANO BISSEXTO E FEVEREIRO
+    value = value.slice(0, 10)
+
+    setFrom(value);
   };
 
   const clearFrom = () => {
     setFrom("");
   };
 
+  const [fromOpen, setFromOpen] = useState(false)
+  const toggleFromOpen = () => {
+    setFromOpen((prev) => (!prev))
+  }
+
   const [to, setTo] = useState<string>("");
 
   const handleTo = (e: ChangeEvent<HTMLInputElement>) => {
-    setTo(e.target.value);
+    let value = e.target.value;
+
+    value = value.replace(/\D/g, "");
+
+    if (Number(value.slice(0,1)) > 3) {
+      value = value.replace(value[0], "")
+    }
+
+    if ((Number(value.slice(0,1)) === 0) && (Number(value.slice(1,2)) === 0)) {
+      value = value.replace(value[1], "")
+    }
+
+    if ((Number(value.slice(0,1)) === 3) && (Number(value.slice(1,2)) > 1)) {
+      value = value.replace(value[1], "")
+    }
+
+    if (value.length > 2) {
+      if (!value.includes("/")) {
+        value = value.slice(0,2) + "/" + value.slice(2)
+      }
+    }
+
+    if (Number(value.slice(3,4)) > 1) {
+      value = value.replace(value[3], "")
+    }
+
+    if ((Number(value.slice(3,4)) === 0) && (Number(value.slice(4,5)) === 0)) {
+      value = value.replace(value[4], "")
+    }
+
+    if ((Number(value.slice(3,4)) === 1) && (Number(value.slice(4,5)) > 2)) {
+      value = value.replace(value[4], "")
+    }
+
+    if (value.length > 5) {
+      if (value[5] != "/") {
+        value = value.slice(0,5) + "/" + value.slice(5)
+      }
+    }
+
+    //TESTAR MAIS, TÁ ESTRANHO
+    //NÃO ESQUECER DO ANO BISSEXTO E FEVEREIRO
+    value = value.slice(0, 10)
+
+    setTo(value);
   };
 
   const clearTo = () => {
     setTo("");
   };
 
+  const [toOpen, setToOpen] = useState(false)
+  const toggleToOpen = () => {
+    setToOpen((prev) => (!prev))
+  }
+
   const [calc, setCalc] = useState(false);
   const toggleCalc = () => {
-    setCalc(!calc);
+    setCalc((prev) => (!prev));
   };
 
   //FAZER LÓGICA PRA IMPEDIR QUE O USUÁRIO NÃO COLOQUE OUTRA COISA SEM SER NÚMERO AQUI!
-  function calcTime(calc: boolean, time: number) {
-    if (isNaN(time)) {
-      return (
-        setTime(""), //setTime("") não sobrescreve o "0.00" que aparece
-        setNotTime("Tempo Inválido")
-      )
+  function calcTime(time: string) {
+    const value = Number(time)
+    if (time.trim() === "" || isNaN(value)) {
+      return ""
     }
     else {
-      return (calc ? (time/60).toFixed(2) : null)
-
+      return (value / 60).toFixed(2);
     }
   }
 
@@ -251,9 +351,13 @@ function UserActivities() {
     clearTo()
     clearProject() 
     clearTime() 
+    if (calc){
+      toggleCalc()
+    }
     clearTitle()
     clearMember()
     clearAction()
+    resetPlaceholders()
   }
 
   const [notTitle, setNotTitle] = useState<string>("");
@@ -284,7 +388,6 @@ function UserActivities() {
     }
   }
 
-
   const [notArea, setNotArea] =  useState<string>("")
   const handleAreaError = () => {
     if (area === "") {
@@ -301,16 +404,116 @@ function UserActivities() {
     }
   }
 
-  const [notTime, setNotTime] = useState<string>("")
-  const handleTimeError = () => {
-    if (time === "") {
-      setNotTime("Digite o tempo")
+  const [notFrom, setNotFrom] = useState<string>("")
+  const handleFromError = () => {
+    if (from === "") {
+      setNotFrom("Escolha uma data")
       return false
     }
-    //fazer else if (time = NaN) {setNotTitle("Tempo inválido") return false} ou fazer em "calc"
     else {
       return true
     }
+  }
+
+  
+  const [timeFrom, setTimeFrom] = useState<string>("")
+  const handleTimeFrom = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+
+    if (Number(value.slice(0,1)) > 2) {
+      value = value.replace(value[0], "")
+    }
+
+    if ((Number(value.slice(0,1)) === 2) && (Number(value.slice(1,2)) > 3)) {
+      value = value.replace(value[1], "")
+    }
+
+    if (value.length > 2) {
+      if (!value.includes(":")) {
+        value = value.slice(0,2) + ":" + value.slice(2)
+      }
+    }
+
+    if (Number(value.slice(3,4)) > 5) {
+      value = value.replace(value[3], "")
+    }
+
+    value = value.slice(0,5)
+
+    setTimeFrom(value)
+  }
+
+  const [notTimeFrom, setNotTimeFrom] = useState<string>("")
+  const handleTimeFromError = () => {
+    if (notTimeFrom === "") {
+      setNotTimeFrom("Horário Inválido")
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+  const [notTo, setNotTo] = useState<string>("")
+  const handleToError = () => {
+    if (to === "") {
+      setNotTo("Escolha uma data")
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+  const [timeTo, setTimeTo] = useState<string>("")
+  const handleTimeTo = (e: ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+
+    if (Number(value.slice(0,1)) > 2) {
+      value = value.replace(value[0], "")
+    }
+
+    if ((Number(value.slice(0,1)) === 2) && (Number(value.slice(1,2)) > 3)) {
+      value = value.replace(value[1], "")
+    }
+
+    if (value.length > 2) {
+      if (!value.includes(":")) {
+        value = value.slice(0,2) + ":" + value.slice(2)
+      }
+    }
+
+    if (Number(value.slice(3,4)) > 5) {
+      value = value.replace(value[3], "")
+    }
+
+    value = value.slice(0,5)
+
+    setTimeTo(value)
+  }
+
+  const [notTimeTo, setNotTimeTo] = useState<string>("")
+  const handleTimeToError = () => {
+    if (to === "") {
+      setNotTimeTo("Escolha uma data")
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+  const [notTime, setNotTime] = useState<string>("")
+  const handleTimeError = () => {
+      const result = calcTime(time);
+
+      if (result === "") {
+        toggleCalc()
+        setNotTime("Tempo inválido")
+        setTime("")
+        return false
+      }
+      return true
   }
 
   const [notAbout, setNotAbout] = useState<string>("")
@@ -324,26 +527,91 @@ function UserActivities() {
     }
   }
 
+  const [emptyChosenActionList, setEmptyChosenActionList] = useState(false)
+  const handleEmptyActionList = () => {
+    if (chosenActions.length === 0) {
+      setEmptyChosenActionList(true)
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
+  const resetPlaceholders = () => {
+    setNotTitle("")
+    setNotProject("")
+    setNotArea("")
+    setNotFrom("")
+    setNotTimeFrom("")
+    setNotTimeTo("")
+    setNotTo("")
+    setNotTime("")
+    setNotAbout("")
+    setEmptyChosenActionList(false)
+  }
   //verificação no instante do envio
   const saveAll = () => {
-    if (handleTitleError() &&
-    handleProjectError() &&
-    handleAreaError() &&
-    handleTimeError() &&
-    handleAboutError()) {
+
+    const titleValid = handleTitleError()
+    const projectValid = handleProjectError()
+    const areaValid = handleAreaError() 
+    const fromValid = handleFromError()
+    const timeFromValid = handleTimeFromError()
+    const toValid = handleToError()
+    const timeToValid = handleTimeToError()
+    const timeValid = handleTimeError() 
+    const aboutValid = handleAboutError()
+    const actionValid = handleEmptyActionList()
+
+    if (
+      titleValid &&
+      projectValid && 
+      areaValid && 
+      fromValid &&
+      timeFromValid &&
+      toValid &&
+      timeToValid &&
+      timeValid && 
+      aboutValid &&
+      actionValid
+    ) {
       setTitle("TODAS AS VALIDAÇÕES FORAM FEITAS E A ATIVIDADE ESTÁ VÁLIDA PARA ENVIO.")
       setTimeout(() => {clearAll()}, 5000)
+      setTimeout(() => {resetPlaceholders()}, 5000)
+    }
+  }
+
+  //Lembrar de transformar "dd/MM/yyyy" em "dd-MM-yyyy" na hora de enviar para a API, se precisar!
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const setDate = () => {
+    const formattedDate = selectedDate
+    ? format(selectedDate, "dd/MM/yyyy", { locale: ptBR }) : "";
+
+    if (fromOpen) {
+      setFrom(formattedDate)
+    }
+    else if (toOpen) {
+      setTo(formattedDate)
+    }
+  }
+  const closeDate = () => {
+    if (fromOpen) {
+      toggleFromOpen()
+    }
+    else if (toOpen) {
+      toggleToOpen()
     }
   }
 
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center w-full">
+    <div className="relative flex flex-col md:flex-row justify-center items-center w-full">
       <div className="flex">
         <Navbar></Navbar>
       </div>
 
       <article
-        className={`${openMembersArea || openActionArea ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}
+        className={`${openMembersArea || openActionArea || fromOpen || toOpen ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}
       ></article>
 
       {openMembersArea ? <MembersArea 
@@ -359,6 +627,50 @@ function UserActivities() {
       toggleOpen={toggleActionsArea}
       save={saveAction} /> : ``}
 
+      {(fromOpen || toOpen) ? (
+              <div className={`absolute z-2 inset-0 flex items-center justify-center gap-10`}>
+                <div className={`${darkTheme ? `bg-[#111111] text-white` : `bg-white`} flex flex-col gap-4 rounded-2xl p-8 text-xl drop-shadow-2xl transition-all duration-300`}>
+                  <DayPicker
+                    locale={ptBR}
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    classNames={{
+                      day_button: "h-10 w-10 hover:cursor-pointer",
+                      selected: "border border-[#4562B3] font-bold",
+                      today: "text-blue-600 font-bold",
+                      chevron: "fill-blue-600"
+                    }}
+                  
+                  />
+
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => closeDate()}
+                      className={`${darkTheme ? `bg-[#FF2E17] text-white border border-[#FF2E17]` : `bg-white border border-[#FF1100] text-[#FF1100]`} rounded-xl  px-4 py-2 cursor-pointer transition-all duration-300`}
+                    >
+                      Cancelar
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        console.log(selectedDate)
+                        setDate()
+                        closeDate()
+                      }}
+                      className="rounded-xl bg-[#4562B3] px-4 py-2 text-white cursor-pointer"
+                    >
+                      Confirmar
+                    </button>
+                  </div>
+                </div>
+
+                <div className={`${darkTheme ? `bg-[#111111] text-white` : `bg-white text-black`} rounded-2xl transition-all duration-300`}>
+                  <AnalogClock></AnalogClock>
+                </div>
+              </div>
+            ) : ``}
+      
       <main
         className={`${darkTheme ? `bg-[url(src/assets/images/backgroundActivitiesPI.png)]` : `bg-[url(src/assets/images/whiteBackground.png)]`} bg-cover min-h-screen w-full flex justify-center items-center pt-20 pb-20 px-4 md:pl-52 md:pr-10 lg:pr-20`}
       >
@@ -442,7 +754,7 @@ function UserActivities() {
                 <div className="flex">
                   <input
                     type="text"
-                    value={`${calc ? calcTime(calc, Number(time)) : time}`}
+                    value={`${calc ? (calcTime(time) === "" ? handleTimeError() : calcTime(time)) : time}`}
                     onChange={handleTime}
                     placeholder={notTime}
                     disabled={calc}
@@ -459,16 +771,29 @@ function UserActivities() {
                 <div className="flex flex-col gap-2 w-full">
                   <div className="flex flex-col">
                     <div className="relative flex w-full items-center">
-                      <input
-                        type="text"
-                        value={from}
-                        onChange={handleFrom}
-                        className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} w-full rounded-full py-2 pl-4 pr-20 focus:outline-none transition-all duration-300`}
-                      />
+                      <div className="bg-[#484848] flex justify-center rounded-full">
+                        <input
+                          type="text"
+                          value={from}
+                          placeholder={notFrom || "dd/mm/aaaa"}
+                          onChange={handleFrom}
+                          className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} ${notFrom ? `placeholder:text-red-500` : ``} w-1/2 placeholder:text-lg rounded-l-full py-2 pl-6 focus:outline-none transition-all duration-300`}
+                        />
+                        <input
+                          type="text"
+                          value={timeFrom}
+                          placeholder={notTimeFrom || "-- : --"}
+                          onChange={handleTimeFrom}
+                          className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} ${notFrom ? `placeholder:text-red-500` : ``} w-1/2 placeholder:text-lg rounded-full py-2 pl-4 focus:outline-none transition-all duration-300`}
+                        />
+                      </div>
+
 
                       <button
                         type="button"
-                        className={`${darkTheme ? `bg-[#1E1E1E] text-[#B0B1B3] border-[#8F9A98]` : `bg-white text-[#B0B1B3] border-[#CCCCCC]`} absolute right-0 rounded-r-3xl h-full w-10 border cursor-pointer transition-all duration-300`}
+                        onClick={toggleFromOpen}
+                        className={`${darkTheme ? `bg-[#1E1E1E] text-[#B0B1B3] border-[#8F9A98]` : `bg-white text-[#B0B1B3] border-[#CCCCCC]`} 
+                        absolute right-0 rounded-r-3xl h-full w-10 border cursor-pointer transition-all duration-300`}
                       >
                         <IoIosArrowForward className="h-full w-full"></IoIosArrowForward>
                       </button>
@@ -480,15 +805,26 @@ function UserActivities() {
                 <div className="flex flex-col gap-2 w-full">
                   <div>
                     <div className="relative flex w-full items-center">
-                      <input
-                        type="text"
-                        value={to}
-                        onChange={handleTo}
-                        className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} w-full rounded-full py-2 pl-4 pr-20 focus:outline-none transition-all duration-300`}
-                      />
+                      <div className="bg-[#484848] flex justify-center rounded-full">
+                        <input
+                          type="text"
+                          value={to}
+                          placeholder={notTo || "dd/mm/aaaa"}
+                          onChange={handleTo}
+                          className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} ${notFrom ? `placeholder:text-red-500` : ``} w-1/2 placeholder:text-lg rounded-l-full py-2 pl-6 focus:outline-none transition-all duration-300`}
+                        />
+                        <input
+                          type="text"
+                          value={timeTo}
+                          placeholder={notTimeTo || "-- : --"}
+                          onChange={handleTimeTo}
+                          className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} ${notFrom ? `placeholder:text-red-500` : ``} w-1/2 placeholder:text-lg rounded-full py-2 pl-4 focus:outline-none transition-all duration-300`}
+                        />
+                      </div>
 
                       <button
                         type="button"
+                        onClick={toggleToOpen}
                         className={`${darkTheme ? `bg-[#1E1E1E] text-[#B0B1B3] border-[#8F9A98]` : `bg-white text-[#B0B1B3] border-[#CCCCCC]`} absolute right-0 rounded-r-3xl h-full w-10 border cursor-pointer transition-all duration-300`}
                       >
                         <IoIosArrowForward className="h-full w-full"></IoIosArrowForward>
@@ -581,6 +917,9 @@ function UserActivities() {
               <div
                 className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} h-40 flex flex-col gap-2 pr-2 overflow-y-auto scrollbar-thin transition-all duration-300`}
               >
+                {(emptyChosenActionList && chosenActions.length === 0) ? <div className=" flex w-full h-full justify-center items-center">
+                  <p className="bg-[#484848] text-red-500 text-2xl p-5 rounded-2xl">Escolha uma ação</p>
+                </div> : ``}
                 {chosenActions.map((action) => (
                   <ActionCard
                   key={action.id}
@@ -594,7 +933,7 @@ function UserActivities() {
 
             <div className="flex flex-col sm:flex-row lg:flex-col gap-5 items-center w-full">
               <button
-                className={`${darkTheme ? `bg-[#4562B3] text-white` : `bg-[#4562B3] text-white`} w-full sm:w-40 h-10 rounded-3xl text-xl hover:cursor-pointer transition-all duration-300`}
+                className={`bg-[#4562B3] text-white w-full sm:w-40 h-10 rounded-3xl text-xl hover:cursor-pointer transition-all duration-300`}
                 onClick={saveAll}
               >
                 Salvar

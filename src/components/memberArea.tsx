@@ -1,6 +1,6 @@
 import { IoMdSearch } from "react-icons/io";
 import { ThemeContext } from "../contexts/themeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import ChooseMemberCard from "./chooseMemberCard";
 
 type Member = {
@@ -19,13 +19,14 @@ type MembersAreaProps = {
 export default function MembersArea({list, toggleChosen, toggleOpen, save}: MembersAreaProps) {
     
     const { darkTheme } = useContext(ThemeContext);
+    const [searchMemberByName, setSearchMemberByName] = useState("")
 
     return(
         <article id="memberArea" className={`${darkTheme ? `bg-[#111111]` : `bg-white`} flex flex-col absolute z-2 text-black md:w-120 md:h-160 gap-3 p-2 rounded-2xl transition-all duration-300`}>
         <div className="flex w-full justify-between p-5">
             <h2 className={`${darkTheme ? `text-white` : `text-black`} font-[Oswald] text-3xl font-bold transition-all duration-300`}>Membros</h2>
             <div className={`${darkTheme ? `bg-[#484848]` : `bg-[#AEB6B5]`} flex px-2 justify-between items-center text-white w-1/2 rounded-lg transition-all duration-300`}>
-                <input type="text" placeholder="BUSCAR MEMBRO" className="focus:outline-none text-white font-[Oswald] w-8/10"/>
+                <input type="text" placeholder="BUSCAR MEMBRO" value={searchMemberByName} onChange={(e) => setSearchMemberByName(e.target.value)} className="focus:outline-none text-white font-[Oswald] w-8/10"/>
                 <IoMdSearch></IoMdSearch>
             </div>
         </div>
@@ -33,6 +34,7 @@ export default function MembersArea({list, toggleChosen, toggleOpen, save}: Memb
         <div className={`${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col overflow-y-auto scrollbar-thin px-5 gap-2 h-120`}>
             <ChooseMemberCard
             list={list}
+            searchMember={searchMemberByName}
             toggleChosen={toggleChosen}
             ></ChooseMemberCard>
             

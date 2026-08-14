@@ -39,6 +39,7 @@ export default function HoursChart() {
   {id: 8, project: "Teia Criativa", chosen: false},
   {id: 9, project: "Outros", chosen: false}
   ])
+  const projectsName = ["Aerodesign", "DevMedias", "Luz", "MauáFood", "Portal das Entidades", "Portal Interno", "Portifólio", "Reservation", "Teia Criativa", "Outros"]
 
   const togglePFilter = (index: number) => {
     setProjectFilter(prev => 
@@ -56,6 +57,12 @@ export default function HoursChart() {
     {id: 4, action: "UI/UX", chosen: false},
   ])
 
+  const actionsName = ["Frontend", "Backend", "RH", "Business","UI/UX"]
+  // const actionsToShow =
+  // chosenActionsList.length > 0
+  //   ? chosenActionsList
+  //   : actions.map(a => a.action);
+
   const toggleAFilter = (index: number) => {
     setActionsFilter(prev => 
       prev.map((action, id) => 
@@ -70,9 +77,10 @@ export default function HoursChart() {
 
   
   // const newProjectsList: string[] = []
-  const [newProjectsList, setNewProjectsList] = useState<string[]>([])
-  const [newActionsList, setNewActionsList] = useState<string[]>([])
+  const [chosenProjectsList, setChosenProjectsList] = useState<string[]>([])
+  const [chosenActionsList, setChosenActionsList] = useState<string[]>([])
   const [projectHours, setProjectHours] = useState<Record<string, number>>({})
+  const [actionHours, setActionHours] = useState<Record<string, number>>({})
   // const modifyNeList = () => {
   //   projects.forEach((project) => (
   //     (project.chosen === true) ? 
@@ -98,23 +106,29 @@ export default function HoursChart() {
     .filter(p => p.chosen)
     .map(p => p.project);
 
-  setNewProjectsList(selectedProjects);
+  setChosenProjectsList(selectedProjects);
 
   const selectedActions = actions
   .filter(p => p.chosen)
   .map(p => p.action)
 
-  setNewActionsList(selectedActions);
+  setChosenActionsList(selectedActions);
 
-  const hours = selectedProjects.reduce((acc, project) => {
+  const projectHours = selectedProjects.reduce((acc, project) => {
     acc[project] = getRandomIndex(numberList);
     return acc;
   }, {} as Record<string, number>);
 
-  setProjectHours(hours);
+  setProjectHours(projectHours);
+
+  const actionHours = selectedActions.reduce((acc, project) => {
+    acc[project] = getRandomIndex(numberList);
+    return acc;
+  }, {} as Record<string, number>);
+  setActionHours(actionHours);
 
     toggleHours()
-    // toggleApply()
+    
     setApply(true)
 
   }
@@ -141,20 +155,22 @@ export default function HoursChart() {
       >
         <div className="flex flex-col md:flex-row gap-10 drop-shadow-xl">
           <article
-            className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-1/3 md:h-175 flex flex-col gap-5 rounded-2xl transition-all duration-300`}
+            className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-1/3 md:h-175 flex flex-col justify-between gap-5 rounded-2xl transition-all duration-300`}
           >
             <div
               className={`${darkTheme ? `bg-black` : `bg-[#E2E2E2]`} flex w-fit drop-shadow-lg rounded-2xl items-center gap-2 p-5 transition-all duration-300`}
             >
               <h1
-                className={`${darkTheme ? `text-white` : `text-black`} flex text-3xl transition-all duration-300`}
+                className={`${darkTheme ? `text-white` : `text-black`} flex text-4xl transition-all duration-300`}
               >
                 Horas Gerais
               </h1>
-              <IoIosArrowForward
-                className={`${darkTheme ? `text-white` : `text-black`} ${hoursOpen ? `rotate-90` : ``} flex text-3xl cursor-pointer transition-all duration-300`}
-                onClick={toggleHours}
-              />
+              {/* "toggleHours" não funciona na div inteira nem o "hover:cursor-pointer" */}
+              <div onClick={toggleHours} className="hover:cursor-pointer">
+                <IoIosArrowForward
+                  className={`${darkTheme ? `text-white` : `text-black`} ${hoursOpen ? `rotate-90` : ``} flex text-4xl  hover:cursor-pointer transition-all duration-300`}
+                />
+              </div>
             </div>
 
             <div
@@ -167,7 +183,7 @@ export default function HoursChart() {
                     <h2 className="text-xl font-bold ">Áreas</h2>
                   </div>
                   <IoIosArrowForward
-                    className={`${darkTheme ? `text-white` : `text-black`} ${hoursOpen ? `rotate-270` : `rotate-90`} flex text-3xl cursor-pointer transition-all duration-300`}
+                    className={`${darkTheme ? `text-white` : `text-black`} ${hoursOpen ? `rotate-270` : `rotate-90 pointer-events-none`} flex text-3xl cursor-pointer transition-all duration-300`}
                     onClick={toggleHours}
                   />
                 </div>
@@ -195,7 +211,7 @@ export default function HoursChart() {
                     </div>
 
                     <button
-                      className="bg-[#5C76BC] text-center rounded-2xl text-white cursor-pointer hover:scale-110 transition-all duration-300"
+                      className={`${hoursOpen ? `` : `pointer-events-none`} bg-[#5C76BC] text-center rounded-2xl text-white cursor-pointer hover:scale-110 transition-all duration-300`}
                       onClick={Aplicar}
                     >
                       Aplicar
@@ -204,18 +220,83 @@ export default function HoursChart() {
                 </div>
               </div>
             </div>
+            <div className={`grid gap-4 h-1/2 p-5
+            ${chosenActionsList.length > 1 ? 
+                chosenProjectsList.length > 1 ? "grid-cols-2" : "grid-cols-1"
+               : "grid-cols-1"}
+            ${darkTheme ? `text-white scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `text-black scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`}
+            overflow-y-auto scrollbar-thin transition-all duration-300`}>
+              {chosenActionsList.length > 0 ? 
 
-            <BasicPie
-            hours={temporaryHoursList}
-            projectList={newProjectsList}
-            ></BasicPie>
+              chosenProjectsList.length > 1 ?
+              
+              chosenActionsList.map((action) => (
+                <BasicPie
+                hours={temporaryHoursList}
+                projectList={chosenProjectsList}
+                projectName={""}
+                actionList={[]}
+                actionName={action}
+                ></BasicPie>
+              )) 
+            
 
-            {((apply === false) || (newProjectsList.length === 0 && newActionsList.length === 0)) ? 
+              :
+
+              (chosenActionsList.length === 1 && chosenProjectsList.length === 0)? 
+              <div>
+                <BasicPie
+                hours={temporaryHoursList}
+                projectList={projectsName}
+                projectName={chosenProjectsList}
+                actionList={chosenActionsList}
+                actionName={chosenActionsList.map(a => a)}
+                ></BasicPie> 
+              </div>
+
+              :
+              <div>
+                <BasicPie
+                hours={temporaryHoursList}
+                projectList={chosenActionsList}
+                projectName={chosenActionsList}
+                actionList={chosenProjectsList}
+                actionName={chosenProjectsList.map(a => a)}
+                ></BasicPie> 
+              </div>
+
+              :
+
+              chosenProjectsList.length === 1 ? 
+                <BasicPie
+                hours={temporaryHoursList}
+                projectList={chosenProjectsList}
+                projectName={chosenProjectsList.map(p => p)}
+                actionList={actionsName}
+                actionName={""}
+                ></BasicPie> 
+              
+              
+              :
+              <div>
+                <BasicPie
+                hours={temporaryHoursList}
+                projectList={chosenProjectsList}
+                projectName={""}
+                actionList={[]}
+                actionName={""}
+                ></BasicPie>
+              </div>
+              }
+
+            </div>
+
+            {(chosenProjectsList.length === 0 && chosenActionsList.length === 0) ? 
             <div className={`${darkTheme ? `text-white` : `text-black`} flex h-60 w-full text-2xl justify-center transition-all duration-300`}>
               <h2 className="text-center">Selecione um projeto para ver<br/> seus detalhes!</h2>
             </div>
             : <div
-              className={`${darkTheme ? `text-white scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `text-black scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col md:h-50 overflow-y-auto scrollbar-thin gap-3 text-2xl md:px-10 py-5 m-5 transition-all duration-300`}
+              className={`${darkTheme ? `text-white scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `text-black scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col md:h-50 overflow-y-auto scrollbar-thin  gap-3 text-2xl md:px-10 py-5 m-5 transition-all duration-300`}
             >
               {apply ? 
               <div className="flex justify-center gap-20 md:gap-40 font-bold">
@@ -223,9 +304,9 @@ export default function HoursChart() {
                 <h4>Área(s)</h4>
               </div> : ``}
               
-              <div className="flex justify-between max-h-40 overflow-y-auto appearance-none scrollbar-thin">
+              <div className="flex justify-between max-h-40 overflow-y-auto appearance-none scrollbar-none">
                 <div className="flex flex-col md:w-1/2 gap-4">
-                {newProjectsList.map((project) => (
+                {chosenProjectsList.map((project) => (
                   <div className="flex gap-10">
                     <div className="flex justify-center items-center gap-2">
                       <div className="rounded-full bg-blue-300 w-2 h-2"></div>
@@ -236,7 +317,7 @@ export default function HoursChart() {
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  {newActionsList.map((action) => (
+                  {chosenActionsList.map((action) => (
                     <div className="flex gap-10">
                     <div className="flex justify-center items-center gap-2">
                       <div className="rounded-full bg-blue-300 w-2 h-2"></div>
@@ -323,22 +404,95 @@ export default function HoursChart() {
                 flex flex-col w-full overflow-y-auto scrollbar-thin px-2 transition-all duration-400 ease-out 
                 ${projectsOpen ? `max-h-110 opacity-100 translate-y-0` : `max-h-0 opacity-0 translate-y-2 overflow-hidden`}`}
               >
-                {newProjectsList.length === 0 ? 
+                {(chosenProjectsList.length === 0 && chosenActionsList.length === 0) ? 
 
-                <div className={`${darkTheme ? `text-white` : `text-black`} flex flex-col justify-center items-center`}>
+                <div className={`flex flex-col justify-center items-center`}>
                   {darkTheme ? 
                   <img src="./src/assets/images/404_new_dark.png" alt="project not found" className={`md:h-110`}/> 
                   : <img src="./src/assets/images/404_new_light.png" alt="project not found" className={`md:h-110`}/>}
                 </div> 
 
                 : <div className={`${darkTheme ? `text-white` : `text-black`} flex flex-col p-3 gap-3`}>
-                  {newProjectsList.map((project) => (
+
+                  {chosenActionsList.length > 0 ? 
+                  
+                  chosenProjectsList.length > 0 ?
+
+                  //Há mais de uma ação e mais de um projeto projeto escolhidos
+                  chosenActionsList.map((action) => (
+                    <div key={action}>
+                      {chosenProjectsList.map((project) => (
+                        <ProjectSummary
+                          key={`${action}-${project}`}
+                          project={project}
+                          action={action}
+                          hours={actionHours[action]}
+                          totalHours={totalHours}
+                        />
+                      ))}
+                    </div>
+                  ))
+
+                  :
+                  chosenActionsList.length === 1 ?
+                  //Há apenas uma ação escolhida e nenhum projeto escolhido
+                  chosenActionsList.map((action) => (
+                    projects.map((project) => (
+                      project.project === "Outros" ? ``                      
+                      :
                       <ProjectSummary
+                        key={action}
+                        project={project.project}
+                        action={action}
+                        hours={actionHours[action]}
+                        totalHours={totalHours}
+                      />
+                    ))
+                  ))
+
+                  :
+                  //Há mais de uma ação escolhida mas nenhum projeto escolhido
+                   chosenActionsList.map((action) => (
+                    <ProjectSummary
+                      key={action}
+                      project={""}
+                      action={action}
+                      hours={actionHours[action]}
+                      totalHours={totalHours}
+                    />
+                    ))
+                   
+                  
+                  
+                  : 
+                  chosenProjectsList.length === 1 ? 
+                  //Não há nenhuma ação escolhida e há apenas um projeto escolhido
+                  chosenProjectsList.map((project) => (
+                    actions.map((area) => (
+                      <ProjectSummary
+                      key={project}
                       project={project}
+                      action={area.action}
                       hours={projectHours[project]}
                       totalHours={totalHours}
-                      ></ProjectSummary>
+                    />
+                    ))
+                  ))
+                  
+                  :
+                  //Não há nenhuma ação escolhida mas há mais de um projeto escolhido
+                  chosenProjectsList.map((project) => (
+                    <ProjectSummary
+                      key={project}
+                      project={project}
+                      action={""}
+                      hours={projectHours[project]}
+                      totalHours={totalHours}
+                    />
                   ))}
+
+
+
                 </div>}
 
               </div>
