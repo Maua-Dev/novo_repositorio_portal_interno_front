@@ -8,16 +8,22 @@ type Member = {
 }
 
 type MemberProps = {
-    list: Member[];
+    list: Member[],
+    searchMember: string,
     toggleChosen: (i:number) => void
 }
 
-export default function ChooseMemberCard({list, toggleChosen}: MemberProps) {
+export default function ChooseMemberCard({list, searchMember, toggleChosen}: MemberProps) {
     
     const { darkTheme } = useContext(ThemeContext);
     
+    const filteredMembers = list.filter((member) => {
+        const search = searchMember.toLocaleLowerCase()
+        return member.name.toLocaleLowerCase().includes(search)
+    }) 
+    
     return(
-        list.map((member, index) => (
+        filteredMembers.map((member, index) => (
             <div key={index} className={`${darkTheme ? `text-white` : `text-[#484848]`} flex w-full p-2 pr-5 justify-between items-center transition-all duration-300`}>
                 <div className="flex flex-col">
                     <h2 className={`${darkTheme ? `text-white` : `text-[#0C0C0D]`} text-md`}>{member.name}</h2>
