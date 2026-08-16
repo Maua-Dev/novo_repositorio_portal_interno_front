@@ -5,6 +5,8 @@ import UserActivities from "./pages/UserActivities";
 import HoursChart from './pages/HoursChart';
 import History from './pages/History';
 import AdminChatbot from "./pages/AdminChatbot"
+import MembersPage from './pages/Members';
+
 
 export default function AppRouter() {
     return (
@@ -15,6 +17,7 @@ export default function AppRouter() {
             <Route path="/historico" element={<History />} />
             <Route path="/horas-gerais" element={<HoursChart />} />
             <Route path="/chatbot" element={<AdminChatbot />} />
+            <Route path="/members" element={<MembersPage />}></Route>
         </Routes>
     )
 }

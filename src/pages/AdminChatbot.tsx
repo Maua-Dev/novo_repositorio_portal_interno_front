@@ -140,7 +140,7 @@ export default function AdminChatbot() {
                 <Navbar />
             </div>
 
-            <main className="bg-[url(src/assets/images/backgroundActivitiesPI.png)] bg-cover min-h-screen w-full flex justify-center pt-20 pb-20 md:pl-52 md:pr-20">
+            <main className={`${darkTheme ? "bg-[url(src/assets/images/backgroundActivitiesPI.png)]": "bg-[url(src/assets/images/whiteBackground.png)]"} bg-cover min-h-screen w-full flex justify-center pt-20 pb-20 md:pl-52 md:pr-20`}>
                 <div className="w-5/6 md:w-full flex flex-col gap-6">
                     <div className="flex flex-col lg:flex-row gap-5">
                         <section className={`${cardClasses} lg:w-2/3 flex flex-col gap-3`}>

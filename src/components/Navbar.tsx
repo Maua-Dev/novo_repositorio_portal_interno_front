@@ -22,11 +22,13 @@ export default function Navbar() {
 
     const closeMenu = () => setMenuOpen(false)
 
+    const goHome = () => navigate('/')
     const goProfile = () => navigate('/perfil')
     const goActivities = () => navigate('/adicionar-atividade')
     const goHistory = () => navigate('/historico')
     const goHoursChart = () => navigate('/horas-gerais')
     const goChatbot = () => navigate('/chatbot')
+    const goMembers = () => navigate('/members')
 
     const overflowItems = [
         { icon: <HiMiniUsers className="text-xl" />, label: "Membros", onClick: closeMenu },
@@ -83,7 +85,7 @@ export default function Navbar() {
                     <button className={buttonClasses} onClick={goProfile}><FaUser />{opened && <span className={labelClasses}>Perfil</span>}</button>
                     <button className={buttonClasses} onClick={goActivities}><FaPlusSquare />{opened && <span className={labelClasses}>Tarefa</span>}</button>
                     <button className={buttonClasses} onClick={goHistory}><FaClockRotateLeft />{opened && <span className={labelClasses}>Histórico</span>}</button>
-                    <button className={buttonClasses}><HiMiniUsers />{opened && <span className={labelClasses}>Membros</span>}</button>
+                    <button className={buttonClasses} onClick={goMembers}><HiMiniUsers />{opened && <span className={labelClasses}>Membros</span>}</button>
                     <button className={buttonClasses} onClick={goHoursChart}><FiPieChart />{opened && <span className={labelClasses}>Geral</span>}</button>
                     <button className={buttonClasses} onClick={goChatbot}><RiRobot2Line />{opened && <span className={labelClasses}>Chatbot</span>}</button>
                 </div>
@@ -91,7 +93,7 @@ export default function Navbar() {
             <div className="hidden md:flex md:flex-col gap-4 place-items-center md:mb-15">
                 <button className={buttonClasses} onClick={toggleTheme}>{darkTheme ? <FiSun /> : <BsMoonStars />}</button>
                 <button className={buttonClasses + ` ${opened ? "rotate-180" : "rotate-0"}`} onClick={() => setOpened(!opened)}><IoIosArrowForward /></button>
-                <button className={buttonClasses}><IoMdExit /></button>
+                <button onClick={goHome} className={buttonClasses}><IoMdExit /></button>
             </div>
         </nav>
     )
