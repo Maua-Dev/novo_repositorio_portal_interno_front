@@ -16,6 +16,8 @@ import bagi from '../assets/images/bagi.png';
 import galaxy from '../assets/images/galaxy.png';
 import MembersFilter from "../components/MembersPageFilter";
 import CommentSection from "../components/commentSection";
+import { FiPlus } from "react-icons/fi";
+import { CgClose } from "react-icons/cg";
 
 type Member = {
     id: number;
@@ -41,18 +43,26 @@ type Strike = {
     mensagem: string
 }
 
-type Comment = {
-    userName: string,
-    otherUserName: string,
-    userPFP: string,
-    date: string,
-    message: string,
-    handleMessage: (message: string) => void,
-    addMessage: () => void,
-    delMessage: (message: string) => void,
-    messageList: string[]
-    toggleOpenComments: () => void
-}
+type Commentary = {
+    id: number;
+    writerpfp: string;
+    writer: string;
+    date: string;
+    writerComment: string;
+};
+
+// type Comment = {
+//     userName: string,
+//     otherUserName: string,
+//     userPFP: string,
+//     date: string,
+//     message: string,
+//     handleMessage: (message: string) => void,
+//     addMessage: () => void,
+//     delMessage: (message: string) => void,
+//     messageList: string[]
+//     toggleOpenComments: () => void
+// }
 
 
 export default function MembersPage() {
@@ -167,7 +177,9 @@ export default function MembersPage() {
     {id: 1, name: "Backend", previousChosen: false, chosen: false },
     {id: 2, name: "UI/UX", previousChosen: false, chosen: false },
     {id: 3, name: "Business", previousChosen: false, chosen: false },
-    {id: 4, name: "RH", previousChosen: false, chosen: false }
+    {id: 4, name: "RH", previousChosen: false, chosen: false },
+    {id: 5, name: "Infra", previousChosen: false, chosen: false },
+    {id: 6, name: "Áreas Internas", previousChosen: false, chosen: false }
     ])
 
     const toggleAreasFilter = (id: number) => {
@@ -343,48 +355,101 @@ export default function MembersPage() {
     }
 
 
-    const [commentMessage, setCommentMessage] = useState<string>("")
+    
+    const [commentaries, setCommentaries] = useState<Commentary[]>([
+        {
+            id: 0,
+            writerpfp: bagi,
+            writer: "Giulia Soares",
+            date: "23/05/2026",
+            writerComment: "aaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+            id: 1,
+            writerpfp: galaxy,
+            writer: "Thiago Tokuji",
+            date: "27/03/2026",
+            writerComment: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+            id: 2,
+            writerpfp: brksedu,
+            writer: "Bruno Carpi",
+            date: "12/01/2026",
+            writerComment: "ccccccccccccccccccccccccc"
+        },
+        {
+            id: 3,
+            writerpfp: cap,
+            writer: "Leo Iorio",
+            date: "05/04/2026",
+            writerComment: "dddddddddddddddddddddddd"
+        },
+        {
+            id: 4,
+            writerpfp: stormfall33,
+            writer: "Gabi",
+            date: "11/06/2026",
+            writerComment: "eeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeeeeeeeeee eeeeeeeeeeeeeeee"
+        },
+    ])
 
-    const [messages, setMessages] = useState<string[]>([
-        "Impressionante demais essa cena",
-        "Olha essa geometria",
-        "Meu Deus cara",
-        "Como é que isso aqui é jogável?",
-        "Olha o nível de detalhe, pelo amor de Deus",
-        "Caraca, Kojima o que que cê fez?"
-      ]);
+    // const [comment, setComment] = useState<string>("")
 
-    const addMessage = () => {
-        if (commentMessage.trim() === "") {
-            return
-        }
-        else {
-            setMessages((prevMessages) => (
-                [...prevMessages,
-                commentMessage]
-            ))
-            setCommentMessage("")
+    // const [messages, setMessages] = useState<string[]>([
+    //     "Impressionante demais essa cena",
+    //     "Olha essa geometria",
+    //     "Meu Deus cara",
+    //     "Como é que isso aqui é jogável?",
+    //     "Olha o nível de detalhe, pelo amor de Deus",
+    //     "Caraca, Kojima o que que cê fez?"
+    //   ]);
+
+    // const addMessage = () => {
+    //     if (comment.trim() === "") {
+    //         return
+    //     }
+    //     else {
+    //         setCommentaries((prevComments) => (
+    //             [...prevComments,
+    //             {   id: 1,
+    //                 date: 11,
+    //                 writer: "Nome do usuário atual",
+    //                 writerComment: "Comentário",
+    //                 writerpfp: ""
+    //             }]
+    //         ))
+    //         setComment("")
             
-        }
-    }
+    //     }
+    // }
     
-    const deleteMessage = (comment: string) => {
-        setMessages((prevMessages) => prevMessages.filter((message) => message != comment))
+    // const deleteMessage = (comment: string) => {
+    //     setCommentaries((prevComments) => prevComments.filter((message) => message.writerComment != comment))
+    // }
+
+    // const comment: Comment = {
+    //     userName: "Luka Santos Monteiro",
+    //     otherUserName: "BRKsEDU",
+    //     userPFP: alanzoka,
+    //     date: new Date().toLocaleDateString("pt-BR"),
+    //     message: commentMessage,
+    //     handleMessage: setCommentMessage,
+    //     addMessage: addMessage,
+    //     delMessage: deleteMessage,
+    //     messageList: commentaries,
+    //     toggleOpenComments: toggleOpenComments
+    //   };
+    
+    const [openAddMember, setOpenAddMember] = useState(false)
+    const toggleOpenAddMember = () => {
+        setOpenAddMember((prev) => !prev)
     }
 
-    const comment: Comment = {
-        userName: "Luka Santos Monteiro",
-        otherUserName: "BRKsEDU",
-        userPFP: "/images/joao.jpg",
-        date: new Date().toLocaleDateString("pt-BR"),
-        message: commentMessage,
-        handleMessage: setCommentMessage,
-        addMessage: addMessage,
-        delMessage: deleteMessage,
-        messageList: messages,
-        toggleOpenComments: toggleOpenComments
-      };
-    
+    const [hoveredAddMember, setHoveredAddMember] = useState(false)
+    const toggleHoveredAddMember = () => {
+        setHoveredAddMember((prev) => (!prev))
+    }
 
     //Os status, quando ativos, ao desativar e apertar cancelar, não voltam o estado do status pro estado certo
     const cancel = () => {
@@ -449,15 +514,21 @@ export default function MembersPage() {
                 <Navbar></Navbar>
             </div>
 
+            {/* criar reset para os filtros do componente filtro e aplicar ao clicar fora do filtro, junto com o toggleOpen para fechar. Criar "toggleCloseComments e toggleCloseFilter para fechar e resetar as coisas" */}
             <section
+            onClick={openFilter ? toggleOpenFilter && cancel : openComments ? toggleOpenComments : openAddMember ? toggleOpenAddMember : undefined}
             className={`fixed inset-0 z-1 bg-black/60 transition-opacity duration-300
-                ${openComments || openFilter ? `opacity-100` : `opacity-0 pointer-events-none`}`}
+                ${openComments || openFilter || openAddMember ? `opacity-100` : `opacity-0 pointer-events-none`}`}
             ></section>
 
             {openComments ? 
             
             <CommentSection
-            comment={comment}
+            userpfp={alanzoka}
+            userName={"Luka Santos Monteiro"}
+            commentList={commentaries}
+            setCommentList={setCommentaries}
+            toggleOpenComments={toggleOpenComments}
             ></CommentSection>
             : ``}
 
@@ -481,70 +552,113 @@ export default function MembersPage() {
                 saveFilter={save}
             >
             </MembersFilter>
-            
             : ``}
 
-            <section className={`${darkTheme ? `bg-[#1E1E1E] text-white` : `bg-white text-black drop-shadow-2xl`} ${openDetails? `w-2/3`: `w-3/3`} flex flex-col md:h-180 rounded-2xl gap-4 p-6 transition-all duration-300`}>
-                
-                {/* placeholder "Buscar membro...." não ta seguindo "transition-all duration-300" */}
-                <article className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold">Membros da Dev Community</h1>
-                    <div className={`${darkTheme ? `bg-[#333333]` : `bg-white`} flex items-center rounded-3xl border transition-all duration-300`}>
-                        <div className={`flex ${darkTheme ? `border-white` : `border-black`} items-center gap-2 p-2 text-lg rounded-3xl border-r-2 transition-all duration-300`}>
-                            <IoMdSearch className={`${darkTheme ? `text-white` : `text-black`} md:text-2xl transition-all duration-300`}></IoMdSearch>
-                            <input type="text"
-                            placeholder="Buscar membro...."
-                            value={searchByName}
-                            onChange={(e) => setSearchByName(e.target.value)}
-                            className={`${darkTheme ? `placeholder:text-white` : `placeholder:text-black`} focus:outline-none transition-all duration-300`}/>
-                        </div>
-                        <div onClick={toggleOpenFilter} className={`flex items-center text-xl gap-2 py-2 px-3 hover:cursor-pointer`}>
-                            <p className={`${darkTheme ? `text-white` : `text-black`} flex items-center transition-all duration-300`}>Filtros</p>
-                            <IoIosArrowForward className={`${openFilter ? `rotate-90` : ``} transition-all duration-300`}></IoIosArrowForward>
-                        </div>
-                    </div>
+            {openAddMember ? 
+            <section className={`${darkTheme ? `bg-[#1E1E1E] border-indigo-500` : `bg-white border-violet-300`} absolute flex flex-col items-center justify-center z-2 md:w-140 md:h-170 border-8 rounded-2xl overflow-hidden drop-shadow-2xl transition-all duration-300`}>
+                <article className={`flex w-full justify-end text-4xl px-4`}>
+                    <CgClose onClick={toggleOpenAddMember} className={`${darkTheme ? `text-white` : `text-black`} hover:cursor-pointer hover:scale-120 transition-all duration-300`}/>
                 </article>
-                
-                <article className={`grid ${openDetails? `grid-cols-3`: `grid-cols-4 `} ${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} w-full md:h-150 overflow-y-auto scrollbar-thin gap-4 p-4 transition-all duration-300`}>
-                    {memberList.filter(filterMemberList).map((member) => (
-                        <MemberCardInfo
-                        profilePicture={member.profilePicture}
-                        name={member.name}
-                        area={member.area}
-                        status={member.status}
-                        projectsInvolved={member.currentProjects}
-                        chosen={member.chosen}
-                        strike={member.strike}
-                        expandDetails={() => getDetailedMember(member.name)}
-                        ></MemberCardInfo>
-                    ))}
-                </article>
+                <article className={`md:h-9/10 flex flex-col justify-center items-center gap-4`}>
+                    <article className={`md:w-120 flex flex-col gap-4`}>
+                        <div className={`flex flex-col gap-2`}>
+                            <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Nome do membro:</h2>
+                            <input type="text" className={`${darkTheme ? `bg-[#484848] text-white` : `bg-gray-200 text-black`} rounded-2xl focus:outline-none px-4 py-1 transition-all duration-300`} placeholder="Digite o nome do membro"/>
+                        </div>
 
+                        <div className={`flex flex-col gap-2`}>
+                            <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Área do membro:</h2>
+                            <input type="text" className={`${darkTheme ? `bg-[#484848] text-white` : `bg-gray-200 text-black`} rounded-2xl focus:outline-none px-4 py-1 transition-all duration-300`} placeholder="Digite a área do membro"/>
+                        </div>
+
+                        <div className={`flex flex-col gap-2`}>
+                            <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Email interno do membro:</h2>
+                            <input type="text" className={`${darkTheme ? `bg-[#484848] text-white` : `bg-gray-200 text-black`} rounded-2xl focus:outline-none px-4 py-1 transition-all duration-300`} placeholder="Digite o email do novo membro"/>
+                        </div>
+                    </article>
+
+                    <div className={`${darkTheme ? `text-[#CCCCCC]` : `text-black`} border w-full transition-all duration-300`}></div>
+
+                    <article className={`h-1/2 md:w-full flex flex-col items-start gap-2`}>
+                        <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Imagem do membro:</h2>
+                        <div className={`flex h-full w-full justify-center items-center`}>
+                            <input type="" className={`${darkTheme ? `border-white placeholder:text-white` : `border-gray-600 placeholder:text-gray-400`} border-2 border-dashed h-full md:w-60 md:h-60 rounded-full text-center hover:cursor-pointer focus:outline-none transition-all duration-300`} placeholder="Selecione um arquivo"/>
+                        </div>
+                    </article>
+
+                    <button className={`bg-[#5C76BC] text-white text-lg px-6 py-1 rounded-2xl hover:cursor-pointer hover:scale-110 transition-all duration-300`}>Registrar novo membro</button>
+                </article>
             </section>
-
-            {openDetails ?
-
-            <DetailedMemberCard
-            name={chosenMember.name}
-            area={chosenMember.area}
-            status={chosenMember.status}
-            ra={chosenMember.ra}
-            admissionYear={chosenMember.admissionYear}
-            collegeDegree={chosenMember.collegeDegree}
-            profilePicture={chosenMember.profilePicture}
-            phoneNumber={chosenMember.phoneNumber}
-            discordProfile={chosenMember.discordProfile}
-            linkedinProfile={chosenMember.linkedinProfile}
-            currentProjects={chosenMember.currentProjects}
-            previousProjects={chosenMember.previousProjects}
-            memberHours={chosenMember.memberHours}
-            strikes={strikes}
-            memberStrikes={chosenMember.strike}
-            toggleOpenComments={toggleOpenComments}
-            ></DetailedMemberCard>
-
             : ``}
 
+            <section className={`flex flex-col items-end md:gap-2`}>
+                
+                <button onMouseEnter={toggleHoveredAddMember} onMouseLeave={toggleHoveredAddMember} onClick={toggleOpenAddMember} className={`${darkTheme ? `bg-[#111188]` : `bg-[#5C76BC]`} text-white flex justify-center items-center gap-1 py-1 px-4 rounded-2xl hover:cursor-pointer transition-all duration-300`}><FiPlus className={`${hoveredAddMember ? `rotate-180` : ``} transition-all duration-600`}/>Adicionar membro</button>
+                
+
+                <section className="flex md:gap-12">
+
+                    <section className={`${darkTheme ? `bg-[#1E1E1E] text-white` : `bg-white text-black drop-shadow-2xl`} ${openDetails? `w-2/3`: `w-3/3`} flex flex-col md:h-180 rounded-2xl gap-4 p-6 transition-all duration-300`}>
+                        
+                        {/* placeholder "Buscar membro...." não ta seguindo "transition-all duration-300" */}
+                        <article className="flex items-center justify-between">
+                            <h1 className="text-3xl font-bold">Membros da Dev Community</h1>
+                            <div className={`${darkTheme ? `bg-[#333333]` : `bg-white`} flex items-center rounded-3xl border transition-all duration-300`}>
+                                <div className={`flex ${darkTheme ? `border-white` : `border-black`} items-center gap-2 p-2 text-lg rounded-3xl border-r-2 transition-all duration-300`}>
+                                    <IoMdSearch className={`${darkTheme ? `text-white` : `text-black`} md:text-2xl transition-all duration-300`}></IoMdSearch>
+                                    <input type="text"
+                                    placeholder="Buscar membro...."
+                                    value={searchByName}
+                                    onChange={(e) => setSearchByName(e.target.value)}
+                                    className={`${darkTheme ? `placeholder:text-white` : `placeholder:text-black`} focus:outline-none transition-all duration-300`}/>
+                                </div>
+                                <div onClick={toggleOpenFilter} className={`flex items-center text-xl gap-2 py-2 px-3 hover:cursor-pointer`}>
+                                    <p className={`${darkTheme ? `text-white` : `text-black`} flex items-center transition-all duration-300`}>Filtros</p>
+                                    <IoIosArrowForward className={`${openFilter ? `rotate-90` : ``} transition-all duration-300`}></IoIosArrowForward>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article className={`grid ${openDetails? `grid-cols-3`: `grid-cols-4 `} ${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} w-full md:h-150 overflow-y-auto scrollbar-thin gap-4 p-4 transition-all duration-300`}>
+                            {memberList.filter(filterMemberList).map((member) => (
+                                <MemberCardInfo
+                                profilePicture={member.profilePicture}
+                                name={member.name}
+                                area={member.area}
+                                status={member.status}
+                                projectsInvolved={member.currentProjects}
+                                chosen={member.chosen}
+                                strike={member.strike}
+                                expandDetails={() => getDetailedMember(member.name)}
+                                ></MemberCardInfo>
+                            ))}
+                        </article>
+                    </section>
+
+                    {openDetails ?
+
+                    <DetailedMemberCard
+                    name={chosenMember.name}
+                    area={chosenMember.area}
+                    status={chosenMember.status}
+                    ra={chosenMember.ra}
+                    admissionYear={chosenMember.admissionYear}
+                    collegeDegree={chosenMember.collegeDegree}
+                    profilePicture={chosenMember.profilePicture}
+                    phoneNumber={chosenMember.phoneNumber}
+                    discordProfile={chosenMember.discordProfile}
+                    linkedinProfile={chosenMember.linkedinProfile}
+                    currentProjects={chosenMember.currentProjects}
+                    previousProjects={chosenMember.previousProjects}
+                    memberHours={chosenMember.memberHours}
+                    strikes={strikes}
+                    memberStrikes={chosenMember.strike}
+                    toggleOpenComments={toggleOpenComments}
+                    ></DetailedMemberCard>
+
+                    : ``}
+                </section>
+            </section>
         </main>
     )
 }

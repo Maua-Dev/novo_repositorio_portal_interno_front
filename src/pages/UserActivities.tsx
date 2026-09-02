@@ -14,7 +14,9 @@ import { DayPicker } from "react-day-picker";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
 import "react-day-picker/dist/style.css";
+import { FaCalendarAlt } from "react-icons/fa";
 import AnalogClock from "../components/analogClock";
+import AnalogClockLuka from "../components/analogLuka";
 
 function UserActivities() {
   const { darkTheme } = useContext(ThemeContext);
@@ -24,7 +26,7 @@ function UserActivities() {
     setOpenMembersArea((prev) => !prev);
   };
 
-  const [openActionArea, setOpenActionsArea] = useState(false);
+  const [openActionsArea, setOpenActionsArea] = useState(false);
   const toggleActionsArea = () => {
     setOpenActionsArea((prev) => !prev);
   };
@@ -300,7 +302,9 @@ function UserActivities() {
     {id: 1, action: "Backend", chosen: false },
     {id: 2, action: "UI/UX", chosen: false },
     {id: 3, action: "Business", chosen: false },
-    {id: 4, action: "RH", chosen: false }
+    {id: 4, action: "RH", chosen: false },
+    {id: 5, action: "Infra", chosen: false },
+    {id: 6, action: "Áreas Internas", chosen: false }
   ];
 
   //Ordenando a lista de ações do backend para display em "actionsArea"
@@ -604,6 +608,14 @@ function UserActivities() {
     }
   }
 
+  //Não ta funcionando para fromOpen e toOpen
+  const closeAll = () => {
+    setOpenMembersArea(false)
+    setOpenActionsArea(false)
+    setFromOpen(false)
+    setToOpen(false)
+  }
+
   return (
     <div className="relative flex flex-col md:flex-row justify-center items-center w-full">
       <div className="flex">
@@ -611,7 +623,8 @@ function UserActivities() {
       </div>
 
       <article
-        className={`${openMembersArea || openActionArea || fromOpen || toOpen ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}
+        onClick={closeAll}
+        className={`${openMembersArea || openActionsArea || fromOpen || toOpen ? `absolute z-1 bg-black/60 w-full min-h-screen` : ``} transition-all duration-300`}
       ></article>
 
       {openMembersArea ? <MembersArea 
@@ -621,7 +634,7 @@ function UserActivities() {
       save={saveMember}
       /> : ``}
 
-      {openActionArea ? <ActionArea
+      {openActionsArea ? <ActionArea
       list={orderedActionList}
       toggleChosen={toggleActionChosen}
       toggleOpen={toggleActionsArea}
@@ -667,6 +680,10 @@ function UserActivities() {
 
                 <div className={`${darkTheme ? `bg-[#111111] text-white` : `bg-white text-black`} rounded-2xl transition-all duration-300`}>
                   <AnalogClock></AnalogClock>
+                </div>
+
+                <div className={`${darkTheme ? `bg-[#111111] text-white` : `bg-white text-black`} rounded-2xl transition-all duration-300`}>
+                  <AnalogClockLuka></AnalogClockLuka>
                 </div>
               </div>
             ) : ``}
@@ -771,11 +788,12 @@ function UserActivities() {
                 <div className="flex flex-col gap-2 w-full">
                   <div className="flex flex-col">
                     <div className="relative flex w-full items-center">
-                      <div className="bg-[#484848] flex justify-center rounded-full">
+                      <div className={`${darkTheme ? `bg-[#484848] ` : `bg-[#E8ECEB]`} flex justify-center rounded-full transition-all duration-300`}>
                         <input
                           type="text"
                           value={from}
                           placeholder={notFrom || "dd/mm/aaaa"}
+                          disabled
                           onChange={handleFrom}
                           className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} ${notFrom ? `placeholder:text-red-500` : ``} w-1/2 placeholder:text-lg rounded-l-full py-2 pl-6 focus:outline-none transition-all duration-300`}
                         />
@@ -793,9 +811,9 @@ function UserActivities() {
                         type="button"
                         onClick={toggleFromOpen}
                         className={`${darkTheme ? `bg-[#1E1E1E] text-[#B0B1B3] border-[#8F9A98]` : `bg-white text-[#B0B1B3] border-[#CCCCCC]`} 
-                        absolute right-0 rounded-r-3xl h-full w-10 border cursor-pointer transition-all duration-300`}
+                        absolute right-0 flex justify-center items-center rounded-lg h-full w-10 border cursor-pointer transition-all duration-300`}
                       >
-                        <IoIosArrowForward className="h-full w-full"></IoIosArrowForward>
+                        <FaCalendarAlt  className="md:h-5 md:w-full"></FaCalendarAlt >
                       </button>
                     </div>
                     <p className="lg:hidden">De</p>
@@ -805,11 +823,12 @@ function UserActivities() {
                 <div className="flex flex-col gap-2 w-full">
                   <div>
                     <div className="relative flex w-full items-center">
-                      <div className="bg-[#484848] flex justify-center rounded-full">
+                      <div className={`${darkTheme ? `bg-[#484848] ` : `bg-[#E8ECEB]`} flex justify-center rounded-full transition-all duration-300`}>
                         <input
                           type="text"
                           value={to}
                           placeholder={notTo || "dd/mm/aaaa"}
+                          disabled
                           onChange={handleTo}
                           className={`${darkTheme ? `bg-[#484848] text-white ` : `bg-[#E8ECEB]`} ${notFrom ? `placeholder:text-red-500` : ``} w-1/2 placeholder:text-lg rounded-l-full py-2 pl-6 focus:outline-none transition-all duration-300`}
                         />
@@ -825,9 +844,10 @@ function UserActivities() {
                       <button
                         type="button"
                         onClick={toggleToOpen}
-                        className={`${darkTheme ? `bg-[#1E1E1E] text-[#B0B1B3] border-[#8F9A98]` : `bg-white text-[#B0B1B3] border-[#CCCCCC]`} absolute right-0 rounded-r-3xl h-full w-10 border cursor-pointer transition-all duration-300`}
+                        className={`${darkTheme ? `bg-[#1E1E1E] text-[#B0B1B3] border-[#8F9A98]` : `bg-white text-[#B0B1B3] border-[#CCCCCC]`}
+                        absolute right-0 rounded-lg h-full w-10 border cursor-pointer transition-all duration-300`}
                       >
-                        <IoIosArrowForward className="h-full w-full"></IoIosArrowForward>
+                        <FaCalendarAlt  className="md:h-5 md:w-full"></FaCalendarAlt >
                       </button>
                     </div>
                     <p className="lg:hidden">Até</p>
