@@ -75,7 +75,7 @@ function UserActivities() {
   }
 
   //Ver um jeito de puxar as áreas que existem no filtro do HoursChart ao invés de usar a "const areas"?
-  const areas: string[] = ["Front-end", "Back-end", "UI/UX", "Business", "RH"]
+  const areas: string[] = ["Front-end", "Back-end", "UI/UX", "Business", "RH", "Infra", "Áreas Internas"]
   function mapAreas() {
     return areas.map((area, index) => (
         <h2 key={index} onMouseEnter={() => setArea(area)} onMouseLeave={() => setArea("")} onClick={() => handleAreaChosen(area)} className={`${darkTheme ? `hover:bg-blue-900` : `hover:bg-blue-300`} px-2 py-2 rounded-xl cursor-pointer transition-all duration-200`}>{area}</h2>

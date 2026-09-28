@@ -6,6 +6,7 @@ import HoursChart from './pages/HoursChart';
 import History from './pages/History';
 import AdminChatbot from "./pages/AdminChatbot"
 import MembersPage from './pages/Members';
+import Projects from './pages/Projects'
 
 
 export default function AppRouter() {
@@ -18,6 +19,7 @@ export default function AppRouter() {
             <Route path="/horas-gerais" element={<HoursChart />} />
             <Route path="/chatbot" element={<AdminChatbot />} />
             <Route path="/members" element={<MembersPage />}></Route>
+            <Route path="/projects" element={<Projects />}></Route>
         </Routes>
     )
 }
