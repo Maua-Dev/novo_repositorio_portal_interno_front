@@ -6,12 +6,14 @@ import ProjectCard from "../components/projectProjects";
 import type { ProjectProps } from "../components/projectProjects";
 import DetailedProjectCard from "../components/DetailedProjectCard";
 import SearchFilter from "../components/SearchFilter";
+import AddNewMemberOrProject from "../components/addNewMemberOrProject";
 
 export default function Projects() {
 
     const { darkTheme } = useContext(ThemeContext)
 
     const [addProject, setAddProject] = useState(false)
+    const [openAddProject, setOpenAddProject] = useState(false)
 
     const [openDetails, setOpenDetails] = useState(false)
 
@@ -195,6 +197,27 @@ export default function Projects() {
                 <Navbar></Navbar>
             </section>
 
+            <section
+            onClick={() => setOpenAddProject(false)}
+            className={`fixed inset-0 z-1 bg-black/60 transition-opacity duration-300
+                ${openAddProject ? `opacity-100` : `opacity-0 pointer-events-none`}`}
+            ></section>
+
+            {openAddProject ? 
+            <AddNewMemberOrProject 
+            id={"project"}
+            close={() => setOpenAddProject(false)}
+            titulo1={"Título do Projeto:"}
+            placeholder1={"Digite o título do projeto"}
+            titulo2={"Descrição:"}
+            placeholder2={"Faça uma breve descrição do projeto"}
+            titulo3={"Contato do P.O:"}
+            placeholder3={"Digite o contato do P.O."}
+            titulo4={"Imagem do projeto:"}
+            buttonText={"Registrar novo projeto"}
+            />
+            : ``}
+
             <section className="flex flex-col md:flex-row md:gap-12 w-full">
                 
 
@@ -208,13 +231,13 @@ export default function Projects() {
                             setSearchByName={setSearchByName}
                             />
                         </div>
-                        <button onMouseEnter={() => setAddProject(true)} onMouseLeave={() => setAddProject(false)} className={`${darkTheme ? `bg-[#5C76DD]` : `bg-[#5C76BC]`} flex justify-center items-center text-white h-fit px-3 py-1 text-xl rounded-full hover:cursor-pointer hover:scale-110 transition-transform duration-300`}>
+                        <button onClick={() => setOpenAddProject(true)} onMouseEnter={() => setAddProject(true)} onMouseLeave={() => setAddProject(false)} className={`${darkTheme ? `bg-[#5C76DD]` : `bg-[#5C76BC]`} flex justify-center items-center text-white h-fit px-3 py-1 text-xl rounded-full hover:cursor-pointer hover:scale-110 transition-transform duration-300`}>
                             <FiPlus className={`${addProject ? `rotate-180` : `rotate-0`} flex transition-transform duration-300`}/>
                         </button>
                     </div>
 
-                    <div className="flex flex-col h-[90%]">
-                        <div className="flex flex-col  w-full overflow-y-auto scrollbar-none">
+                    <div className="flex flex-col h-[90%] md:pb-10">
+                        <div className="flex flex-col w-full overflow-y-auto scrollbar-none">
                             {projectList.filter(filteredList).map((project) => (
                                 <div onClick={() => setOpenDetails(true)}>
                                     <ProjectCard

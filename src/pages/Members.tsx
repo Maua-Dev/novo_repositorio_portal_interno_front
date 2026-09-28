@@ -17,7 +17,7 @@ import galaxy from '../assets/images/galaxy.png';
 import MembersFilter from "../components/MembersPageFilter";
 import CommentSection from "../components/commentSection";
 import { FiPlus } from "react-icons/fi";
-import { CgClose } from "react-icons/cg";
+import AddNewMemberOrProject from "../components/addNewMemberOrProject";
 
 type Member = {
     id: number;
@@ -555,40 +555,18 @@ export default function MembersPage() {
             : ``}
 
             {openAddMember ? 
-            <section className={`${darkTheme ? `bg-[#1E1E1E] border-indigo-500` : `bg-white border-violet-300`} absolute flex flex-col items-center justify-center z-2 md:w-140 md:h-170 border-8 rounded-2xl overflow-hidden drop-shadow-2xl transition-all duration-300`}>
-                <article className={`flex w-full justify-end text-4xl px-4`}>
-                    <CgClose onClick={toggleOpenAddMember} className={`${darkTheme ? `text-white` : `text-black`} hover:cursor-pointer hover:scale-120 transition-all duration-300`}/>
-                </article>
-                <article className={`md:h-9/10 flex flex-col justify-center items-center gap-4`}>
-                    <article className={`md:w-120 flex flex-col gap-4`}>
-                        <div className={`flex flex-col gap-2`}>
-                            <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Nome do membro:</h2>
-                            <input type="text" className={`${darkTheme ? `bg-[#484848] text-white` : `bg-gray-200 text-black`} rounded-2xl focus:outline-none px-4 py-1 transition-all duration-300`} placeholder="Digite o nome do membro"/>
-                        </div>
-
-                        <div className={`flex flex-col gap-2`}>
-                            <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Área do membro:</h2>
-                            <input type="text" className={`${darkTheme ? `bg-[#484848] text-white` : `bg-gray-200 text-black`} rounded-2xl focus:outline-none px-4 py-1 transition-all duration-300`} placeholder="Digite a área do membro"/>
-                        </div>
-
-                        <div className={`flex flex-col gap-2`}>
-                            <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Email interno do membro:</h2>
-                            <input type="text" className={`${darkTheme ? `bg-[#484848] text-white` : `bg-gray-200 text-black`} rounded-2xl focus:outline-none px-4 py-1 transition-all duration-300`} placeholder="Digite o email do novo membro"/>
-                        </div>
-                    </article>
-
-                    <div className={`${darkTheme ? `text-[#CCCCCC]` : `text-black`} border w-full transition-all duration-300`}></div>
-
-                    <article className={`h-1/2 md:w-full flex flex-col items-start gap-2`}>
-                        <h2 className={`${darkTheme ? `text-white` : `text-black`} text-xl font-bold transition-all duration-300`}>Imagem do membro:</h2>
-                        <div className={`flex h-full w-full justify-center items-center`}>
-                            <input type="" className={`${darkTheme ? `border-white placeholder:text-white` : `border-gray-600 placeholder:text-gray-400`} border-2 border-dashed h-full md:w-60 md:h-60 rounded-full text-center hover:cursor-pointer focus:outline-none transition-all duration-300`} placeholder="Selecione um arquivo"/>
-                        </div>
-                    </article>
-
-                    <button className={`bg-[#5C76BC] text-white text-lg px-6 py-1 rounded-2xl hover:cursor-pointer hover:scale-110 transition-all duration-300`}>Registrar novo membro</button>
-                </article>
-            </section>
+            <AddNewMemberOrProject 
+            id={"member"}
+            close={toggleOpenAddMember}
+            titulo1={"Nome do membro:"}
+            placeholder1={"Digite o nome do membro"}
+            titulo2={"Área do membro:"}
+            placeholder2={"Digite a área do membro"}
+            titulo3={"Email interno do membro:"}
+            placeholder3={"Digite o email do novo membro"}
+            titulo4={"Imagem do membro:"}
+            buttonText={"Registrar novo membro"}
+            />
             : ``}
 
             <section className={`flex flex-col items-end md:gap-2`}>
