@@ -55,9 +55,11 @@ export default function HoursChart() {
     {id: 2, action: "RH", chosen: false},
     {id: 3, action: "Business", chosen: false},
     {id: 4, action: "UI/UX", chosen: false},
+    {id: 5, action: "Infra", chosen: false},
+    {id: 6, action: "Áreas Internas", chosen: false},
   ])
 
-  const actionsName = ["Frontend", "Backend", "RH", "Business","UI/UX"]
+  const actionsName = ["Frontend", "Backend", "RH", "Business","UI/UX", "Infra", "Áreas Internas"]
   // const actionsToShow =
   // chosenActionsList.length > 0
   //   ? chosenActionsList
@@ -69,12 +71,6 @@ export default function HoursChart() {
       index === id ? {...action, chosen: !action.chosen} : action)
     )
   }
-
-  const [apply, setApply] = useState(false)
-  // const toggleApply = () => {
-  //   setApply(true)
-  // }
-
   
   // const newProjectsList: string[] = []
   const [chosenProjectsList, setChosenProjectsList] = useState<string[]>([])
@@ -128,9 +124,6 @@ export default function HoursChart() {
   setActionHours(actionHours);
 
     toggleHours()
-    
-    setApply(true)
-
   }
 
   //Só pra brincar um pouco com a progressão dos projetos em "resumo por projeto"
@@ -155,7 +148,7 @@ export default function HoursChart() {
       >
         <div className="flex flex-col md:flex-row gap-10 drop-shadow-xl">
           <article
-            className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-1/3 md:h-175 flex flex-col justify-between gap-5 rounded-2xl transition-all duration-300`}
+            className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} md:w-1/3 md:h-175 drop-shadow-xl flex flex-col justify-between rounded-2xl transition-all duration-300`}
           >
             <div
               className={`${darkTheme ? `bg-black` : `bg-[#E2E2E2]`} flex w-fit drop-shadow-lg rounded-2xl items-center gap-2 p-5 transition-all duration-300`}
@@ -174,10 +167,10 @@ export default function HoursChart() {
             </div>
 
             <div
-              className={`${hoursOpen ? `opacity-100 translate-y-10 z-1` : `opacity-0 translate-y-0`} ${darkTheme ? `text-white bg-[#101010]` : `text-black bg-[#F0F0F0]`} flex absolute mt-10 md:w-100 rounded-2xl justify-between p-5 transition-all duration-300`}
+              className={`${hoursOpen ? `opacity-100 translate-y-10 z-1` : `opacity-0 translate-y-0`} ${darkTheme ? `text-white bg-[#101010]` : `text-black bg-[#F0F0F0]`} flex absolute mt-10 md:w-110 rounded-2xl justify-between p-5 transition-all duration-300`}
             >
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-10 items-center justify-between">
+              <div className="flex w-full flex-col gap-2">
+                <div className="flex w-full gap-10 items-center justify-between">
                   <div className="flex w-8/10 justify-between">
                     <h2 className="w-1/2 text-xl font-bold ">Projetos</h2>
                     <h2 className="text-xl font-bold ">Áreas</h2>
@@ -188,7 +181,7 @@ export default function HoursChart() {
                   />
                 </div>
 
-                <div className="flex gap-5">
+                <div className="flex justify-between w-full">
                   <div className="flex flex-col">
                     {projects.map((project) => (
                       <ProjectsFilter
@@ -220,7 +213,7 @@ export default function HoursChart() {
                 </div>
               </div>
             </div>
-            <div className={`grid gap-4 h-1/2 p-5
+            <div className={`grid gap-4 items-center mx-4 h-1/2 
             ${chosenActionsList.length > 1 ? 
                 chosenProjectsList.length > 1 ? "grid-cols-2" : "grid-cols-1"
                : "grid-cols-1"}
@@ -298,7 +291,7 @@ export default function HoursChart() {
             : <div
               className={`${darkTheme ? `text-white scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `text-black scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} flex flex-col md:h-50 overflow-y-auto scrollbar-thin  gap-3 text-2xl md:px-10 py-5 m-5 transition-all duration-300`}
             >
-              {apply ? 
+              {(chosenProjectsList.length > 0 || chosenActionsList.length > 0) ? 
               <div className="flex justify-center gap-20 md:gap-40 font-bold">
                 <h4>Projeto(s)</h4>
                 <h4>Área(s)</h4>
@@ -452,7 +445,7 @@ export default function HoursChart() {
 
                   :
                   //Há mais de uma ação escolhida mas nenhum projeto escolhido
-                   chosenActionsList.map((action) => (
+                  chosenActionsList.map((action) => (
                     <ProjectSummary
                       key={action}
                       project={""}

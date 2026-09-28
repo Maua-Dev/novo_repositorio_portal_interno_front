@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import { HiMiniUsers, HiEllipsisHorizontal } from "react-icons/hi2";
 import { FiPieChart, FiSun } from "react-icons/fi";
 import { RiRobot2Line } from "react-icons/ri";
+import { GoProjectSymlink } from "react-icons/go";
 import { ThemeContext } from "../contexts/themeContext";
 
 export default function Navbar() {
@@ -29,6 +30,7 @@ export default function Navbar() {
     const goHoursChart = () => navigate('/horas-gerais')
     const goChatbot = () => navigate('/chatbot')
     const goMembers = () => navigate('/members')
+    const goProjects = () => navigate('/projects')
 
     const overflowItems = [
         { icon: <HiMiniUsers className="text-xl" />, label: "Membros", onClick: closeMenu },
@@ -80,12 +82,13 @@ export default function Navbar() {
                         )}
                     </div>
                 </div>
-
+                
                 <div className={`hidden md:flex md:flex-col gap-4 transition-all ${opened ? "place-items-start ps-10" : "place-items-center"}`}>
                     <button className={buttonClasses} onClick={goProfile}><FaUser />{opened && <span className={labelClasses}>Perfil</span>}</button>
                     <button className={buttonClasses} onClick={goActivities}><FaPlusSquare />{opened && <span className={labelClasses}>Tarefa</span>}</button>
                     <button className={buttonClasses} onClick={goHistory}><FaClockRotateLeft />{opened && <span className={labelClasses}>Histórico</span>}</button>
                     <button className={buttonClasses} onClick={goMembers}><HiMiniUsers />{opened && <span className={labelClasses}>Membros</span>}</button>
+                    <button className={buttonClasses} onClick={goProjects}><GoProjectSymlink />{opened && <span className={labelClasses}>Membros</span>}</button> 
                     <button className={buttonClasses} onClick={goHoursChart}><FiPieChart />{opened && <span className={labelClasses}>Geral</span>}</button>
                     <button className={buttonClasses} onClick={goChatbot}><RiRobot2Line />{opened && <span className={labelClasses}>Chatbot</span>}</button>
                 </div>

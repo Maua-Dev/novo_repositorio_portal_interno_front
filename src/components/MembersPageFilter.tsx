@@ -41,12 +41,12 @@ export default function MembersFilter({areaList, projectList, allowStrike, toggl
     const { darkTheme } = useContext(ThemeContext);
 
     return (
-        <section className={`${darkTheme ? `bg-[#1E1E1E] text-white` : `bg-white text-black`} flex flex-col justify-between md:gap-8 absolute z-2 md:w-210 md:h-110 rounded-3xl p-10 drop-shadow-2xl transition-all duration-300`}>
+        <section className={`${darkTheme ? `bg-[#1E1E1E] text-white` : `bg-white text-black`} flex flex-col justify-between absolute z-2 md:w-240 md:h-130 rounded-3xl p-10 drop-shadow-2xl transition-all duration-300`}>
                 {/* <article onClick={toggleOpenFilter} className={`flex justify-end hover:cursor-pointer`}>
                     <IoIosArrowForward className={`text-3xl rotate-270`}></IoIosArrowForward>
                 </article> */}
-                <article className={`flex justify-center gap-6`}>
-                    <div className={`flex flex-col gap-5`}>
+                <article className={`flex justify-between px-6`}>
+                    <div className={`flex flex-col text-xl gap-5`}>
                         <h2 className={`text-3xl font-bold`}>Áreas:</h2>
                         {areaList.map((area) => (
                             <ActionsFilter
@@ -59,9 +59,9 @@ export default function MembersFilter({areaList, projectList, allowStrike, toggl
 
                     <div className={`border border-[#A2A2A2]`}></div>
 
-                    <div className={`flex flex-col w-60 h-70 gap-4`}>
+                    <div className={`flex flex-col md:w-70 md:h-90 gap-4`}>
                         <h2 className={`text-3xl font-bold`}>Projetos:</h2>
-                        <div className={`flex flex-col ${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} overflow-y-auto scrollbar-thin transition-all duration-300`}>
+                        <div className={`flex flex-col text-xl ${darkTheme ? `scrollbar-thumb-[#8F9A98] scrollbar-track-[#484848]` : `scrollbar-thumb-[#8F9A98] scrollbar-track-[#E8ECEB]`} overflow-y-auto scrollbar-thin transition-all duration-300`}>
                             <div className={`flex flex-col gap-2 pr-5`}>
                                 {projectList.map((project) => (
                                     <ProjectsFilter

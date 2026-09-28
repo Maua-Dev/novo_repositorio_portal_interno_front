@@ -17,7 +17,7 @@ export default function MemberCardInfo({profilePicture, name, area, status, stri
     const { darkTheme } = useContext(ThemeContext);
 
     return (
-        <div id={strike} className={`${darkTheme ? `bg-[#333333]` : `bg-[#F3F3F3]`} border-[#B4B4B4] flex flex-col w-full md:max-h-fit rounded-lg border  transition-all duration-300`}>
+        <div id={strike} className={`${darkTheme ? `bg-[#333333]` : `bg-[#F3F3F3]`} border-[#B4B4B4] flex flex-col w-full md:max-h-fit rounded-lg border hover:scale-105 hover:drop-shadow-xl transition-all duration-300`}>
                             <div className={`flex flex-col w-full gap-3 px-6 py-4 rounded-lg`}>
                                 <div className="flex gap-4">
                                     <img src={profilePicture} className={`md:w-20 md:h-20 rounded-full`}></img>
