@@ -11,7 +11,22 @@ export default function Profile() {
     const { darkTheme } = useContext(ThemeContext);
 
     const [pfpHovered, setPfpHovered] = useState(false)
-    localStorage.setItem("Redes sociais", JSON.stringify({ "phone": "(11) 99858-6587", "discord": "_lukzin", "linkedin": "lucca" }))
+    const initialProfile = {
+        name: "Lucca Rodrigues",
+        ra: "25.00503-4",
+        curso: "CIC",
+        ano: "2º",
+        cargo: "Desenvolvedor / Gestor",
+        status: "Ativo"
+    }
+    const [profile, setProfile] = useState(initialProfile)
+    const [editForm, setEditForm] = useState(initialProfile)
+    const [isEditing, setIsEditing] = useState(false)
+
+    const storedSocials = localStorage.getItem("Redes sociais");
+    const parsedSocials = storedSocials ? JSON.parse(storedSocials) : { phone: "(11) 99858-6587", discord: "_lukzin", linkedin: "lbrodrigues" };
+    const [socials, setSocials] = useState(parsedSocials)
+    const [editSocials, setEditSocials] = useState(parsedSocials)
     return (
         <div className="flex w-full poppins-regular">
 
@@ -21,10 +36,35 @@ export default function Profile() {
             <main className={`${darkTheme ? "bg-[url(src/assets/images/backgroundActivitiesPI.png)]" : "bg-[url(src/assets/images/whiteBackground.png)]"} bg-cover min-h-screen w-full flex justify-center pt-20 pb-20 md:pl-52 md:pr-20`}>
                 <div className="w-5/6 h-fit flex flex-col gap-5 md:flex-row md:w-full">
                     <div id="card-resumo-perfil" className={`${darkTheme ? `bg-[#1E1E1E]` : `bg-white`} rounded-2xl p-6 flex flex-col gap-6 md:w-3/4 transition-all duration-300`}>
-                        <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-2xl md:text-3xl transition-all duration-300`}>Resumo do seu perfil</h2>
+                        <div className="flex items-start justify-between">
+                            <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-2xl md:text-3xl transition-all duration-300`}>Resumo do seu perfil</h2>
+                            {!isEditing ? (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className={`${darkTheme ? `text-white border border-[#333] hover:bg-[rgba(255,255,255,0.02)]` : `text-black border border-gray-200 hover:bg-gray-100`} ml-4 px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer`}
+                                >
+                                    Editar perfil
+                                </button>
+                            ) : (
+                                <div className="flex gap-2 ml-4">
+                                    <button
+                                        onClick={() => { setProfile(editForm); setSocials(editSocials); localStorage.setItem("Redes sociais", JSON.stringify(editSocials)); setIsEditing(false) }}
+                                        className={`${darkTheme ? `text-white bg-[#4562B3] hover:bg-[#3553a5]` : `text-white bg-blue-300 hover:bg-blue-400`} px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer hover:scale-105`}
+                                    >
+                                        Salvar
+                                    </button>
+                                    <button
+                                        onClick={() => { setEditForm(profile); setIsEditing(false) }}
+                                        className={`${darkTheme ? `text-white border border-[#333] hover:bg-[rgba(255,255,255,0.02)]` : `text-black border border-gray-200 hover:bg-gray-100`} px-3 py-1 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer`}
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                         <div className="flex flex-col md:flex-row gap-6 md:gap-20">
                             <div
-                                className="bg-linear-to-r from-purple-600 to-blue-300 rounded-full justify-center place-items-center w-28 h-28 text-white flex relative overflow-hidden"
+                                className="relative flex size-28 shrink-0 self-center place-items-center justify-center overflow-hidden rounded-full bg-linear-to-r from-purple-600 to-blue-300 text-white md:self-start"
                                 onMouseEnter={() => setPfpHovered(true)}
                                 onMouseLeave={() => setPfpHovered(false)}
                             >
@@ -35,24 +75,77 @@ export default function Profile() {
                                     Editar
                                 </div>
                             </div>
-                            <div id="resumo-info-perfil" className="flex flex-col gap-3">
+                            <div id="resumo-info-perfil" className="flex flex-1 flex-col gap-3">
                                 <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-xl md:hidden transition-all duration-300`}>Informações pessoais</h2>
                                 <div className={`${darkTheme ? `text-white` : `text-black`} text-lg flex flex-col md:gap-3 transition-all duration-300`}>
-                                    <p className="font-semibold md:text-2xl">Lucca Rodrigues</p>
-                                    <div className="md:flex gap-12">
-                                        <div>
-                                            <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>RA:</span> 25.00503-4</p>
-                                            <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Curso:</span> CIC</p>
-                                            <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Ano:</span> 2º</p>
-                                        </div>
-                                        <div>
-                                            <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Cargo:</span> Desenvolvedor / Gestor</p>
-                                            <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Status:</span> Ativo</p>
-                                        </div>
-                                        <div>
-                                            <SocialProfile />
-                                        </div>
-                                    </div>
+                                    {!isEditing ? (
+                                        <>
+                                            <p className="font-semibold md:text-2xl">{profile.name}</p>
+                                            <div className="gap-12 md:flex md:w-full">
+                                                <div>
+                                                    <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>RA:</span> {profile.ra}</p>
+                                                    <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Curso:</span> {profile.curso}</p>
+                                                    <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Ano:</span> {profile.ano}</p>
+                                                </div>
+                                                <div>
+                                                    <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Cargo:</span> {profile.cargo}</p>
+                                                    <p className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} transition-all duration-300`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold transition-all duration-300`}>Status:</span> {profile.status}</p>
+                                                </div>
+                                                <div className="md:ml-auto md:mr-6">
+                                                    <SocialProfile socials={socials} />
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <input
+                                                value={editForm.name}
+                                                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} font-semibold md:text-2xl px-2 py-1 rounded transition-all duration-200 border`}
+                                            />
+                                            <div className="gap-12 md:flex md:w-full">
+                                                <div className="flex flex-col gap-2">
+                                                    <label className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} text-sm`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold`}>RA:</span></label>
+                                                    <input value={editForm.ra} onChange={(e) => setEditForm({ ...editForm, ra: e.target.value })} className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`} />
+                                                    <label className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} text-sm`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold`}>Curso:</span></label>
+                                                    <input value={editForm.curso} onChange={(e) => setEditForm({ ...editForm, curso: e.target.value })} className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`} />
+                                                    <label className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} text-sm`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold`}>Ano:</span></label>
+                                                    <input value={editForm.ano} onChange={(e) => setEditForm({ ...editForm, ano: e.target.value })} className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`} />
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    <label className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} text-sm`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold`}>Cargo:</span></label>
+                                                    <input value={editForm.cargo} onChange={(e) => setEditForm({ ...editForm, cargo: e.target.value })} className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`} />
+                                                    <label className={`${darkTheme ? `text-[#BCBCBC]` : `text-black`} text-sm`}><span className={`${darkTheme ? `text-white` : `text-black`} font-semibold`}>Status:</span></label>
+                                                    <input value={editForm.status} onChange={(e) => setEditForm({ ...editForm, status: e.target.value })} className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`} />
+                                                </div>
+                                                <div className="md:ml-auto md:mr-6 flex items-start gap-4">
+                                                    <div className="flex flex-col items-end gap-2">
+                                                        <SocialProfile socials={editSocials} />
+                                                        <div className="flex flex-col gap-2 mt-2 w-48">
+                                                            <input
+                                                                value={editSocials.phone}
+                                                                onChange={(e) => setEditSocials({ ...editSocials, phone: e.target.value })}
+                                                                placeholder="Telefone"
+                                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`}
+                                                            />
+                                                            <input
+                                                                value={editSocials.linkedin}
+                                                                onChange={(e) => setEditSocials({ ...editSocials, linkedin: e.target.value })}
+                                                                placeholder="LinkedIn"
+                                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`}
+                                                            />
+                                                            <input
+                                                                value={editSocials.discord}
+                                                                onChange={(e) => setEditSocials({ ...editSocials, discord: e.target.value })}
+                                                                placeholder="Discord"
+                                                                className={`${darkTheme ? `bg-[#2A2A2A] text-white` : `bg-white text-black`} px-2 py-1 rounded border`}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
