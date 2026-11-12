@@ -1,16 +1,56 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import Navbar from "../components/Navbar"
 import { CiClock2 } from "react-icons/ci";
 import { IoStar } from "react-icons/io5";
 import { ThemeContext } from "../contexts/themeContext";
 import { useContext } from "react";
 import SocialProfile from "../components/socialProfile";
+import portalInternoPreview from "../assets/images/desktopLoginLightPI.png";
+
+const projects = [
+    { name: "Portal Interno", color: "blue", desc: "Projeto para computação de atividades relacionadas a DEV" },
+    { name: "Dev Medias", color: "red", desc: "Projeto para cálculo de médias de provas da mauá" },
+    { name: "Portal Interno", color: "red", desc: "Projeto para computação de atividades relacionadas a DEV" },
+    { name: "Luz", color: "blue", desc: "Projeto Luz?" },
+    { name: "Reservation", color: "red", desc: "Projeto para reservar quadras na mauá" },
+    { name: "Portal Interno", color: "red", desc: "Projeto para computação de atividades relacionadas a DEV" },
+] as const;
+
+const PROJECT_PREVIEW_WIDTH = 288;
+const PROJECT_PREVIEW_OFFSET = 16;
 
 export default function Profile() {
 
     const { darkTheme } = useContext(ThemeContext);
 
     const [pfpHovered, setPfpHovered] = useState(false)
+    const [projectPreview, setProjectPreview] = useState({
+        visible: false,
+        x: 0,
+        y: 0,
+        name: "",
+        desc: ""
+    });
+
+    const showProjectPreview = (event: MouseEvent<HTMLElement>, projectName: string, projectDesc: string) => {
+        const x = Math.min(
+            event.clientX + PROJECT_PREVIEW_OFFSET,
+            window.innerWidth - PROJECT_PREVIEW_WIDTH - PROJECT_PREVIEW_OFFSET,
+        );
+        const y = Math.min(event.clientY + PROJECT_PREVIEW_OFFSET, window.innerHeight - 230);
+
+        setProjectPreview({
+            visible: true,
+            x: Math.max(PROJECT_PREVIEW_OFFSET, x),
+            y: Math.max(PROJECT_PREVIEW_OFFSET, y),
+            name: projectName,
+            desc: projectDesc
+        });
+    };
+
+    const hideProjectPreview = () => {
+        setProjectPreview((preview) => ({ ...preview, visible: false }));
+    };
     localStorage.setItem("Redes sociais", JSON.stringify({ "phone": "(11) 99858-6587", "discord": "_lukzin", "linkedin": "lucca" }))
     return (
         <div className="flex w-full poppins-regular">
@@ -81,16 +121,42 @@ export default function Profile() {
                             <div className={`${darkTheme ? `border-[#BCBCBC]` : `border-gray-200`} border border-gray-200 w-full place-self-center transition-all duration-300`} />
                             <h2 className={`${darkTheme ? `text-white` : `text-black`} font-bold text-2xl md:text-3xl transition-all duration-300`}>Projetos envolvidos</h2>
                             <div className="w-full flex flex-wrap justify-center items-center gap-2 md:gap-x-4 md:gap-y-2">
-                                <p className={`${darkTheme ? `bg-[#4562B3] text-white` : `bg-blue-300`} text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}>Portal Interno</p>
-                                <p className={`${darkTheme ? `bg-[#B34444] text-white` : `bg-red-300`} text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}>Dev Medias</p>
-                                <p className={`${darkTheme ? `bg-[#B34444] text-white` : `bg-red-300`} text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}>Portal Interno</p>
-                                <p className={`${darkTheme ? `bg-[#4562B3] text-white` : `bg-blue-300`} text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}>Luz</p>
-                                <p className={`${darkTheme ? `bg-[#B34444] text-white` : `bg-red-300`} text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}>Reservation</p>
-                                <p className={`${darkTheme ? `bg-[#B34444] text-white` : `bg-red-300`} text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}>Portal Interno</p>
+                                {projects.map((project, index) => (
+                                    <p
+                                        key={`${project.name}-${index}`}
+                                        className={`${darkTheme
+                                            ? project.color === "blue" ? `bg-[#4562B3] text-white` : `bg-[#B34444] text-white`
+                                            : project.color === "blue" ? `bg-blue-300` : `bg-red-300`
+                                            } text-center text-md px-6 py-1 rounded-2xl shadow-md transition-all duration-300 hover:scale-105 cursor-pointer`}
+                                        onMouseEnter={(event) => showProjectPreview(event, project.name, project.desc)}
+                                        onMouseMove={(event) => showProjectPreview(event, project.name, project.desc)}
+                                        onMouseLeave={hideProjectPreview}
+                                    >
+                                        {project.name}
+                                    </p>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <aside
+                    aria-hidden={!projectPreview.visible}
+                    className={`${darkTheme ? "bg-[#292929] text-white border-white/10" : "bg-white text-gray-900 border-black/10"} pointer-events-none fixed z-50 w-72 overflow-hidden rounded-xl border shadow-2xl transition-opacity duration-150 ${projectPreview.visible ? "opacity-100" : "opacity-0"}`}
+                    style={{ left: projectPreview.x, top: projectPreview.y }}
+                >
+                    <img
+                        src={portalInternoPreview}
+                        alt="Prévia do Portal Interno"
+                        className="h-32 w-full object-cover object-top"
+                    />
+                    <div className="p-4">
+                        <p className="mb-1 text-sm font-bold">{projectPreview.name}</p>
+                        <p className={`${darkTheme ? "text-[#D0D0D0]" : "text-gray-600"} text-xs leading-relaxed`}>
+                            {projectPreview.desc}
+                        </p>
+                    </div>
+                </aside>
             </main>
         </div>
     )
